@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AwakeProd — independent software studio</title>
+<meta name="description" content="AwakeProd designs, builds and ships its own web and mobile products: Invecter, Hextaze, Technipatch and Devancel. Independent software, made in France.">
+<link rel="canonical" href="https://awakeprod.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AwakeProd — independent software studio">
+<meta property="og:description" content="Instruments for live AV crews, a generative camera, a system diagram editor and a public tender monitor. One studio, from first sketch to store release.">
+<meta property="og:url" content="https://awakeprod.com/">
+<meta property="og:image" content="https://awakeprod.com/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" type="image/png" sizes="64x64" href="/img/favicon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/img/icon-512.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--vh:min(100vh,1000px);--blue:#2B4FFF;--anth:#1F2226}
+html{scroll-behavior:smooth}
+body{margin:0;background:#FFFFFF;color:#000000;font-family:'Google Sans','Product Sans',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:#2B4FFF}a:hover{color:#000000}
+.ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lab{font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#5A5E66}
+@media (pointer:fine){body,a,button{cursor:none}}
+
+.grain{position:fixed;inset:-100%;width:300%;height:300%;z-index:90;pointer-events:none;opacity:.07;mix-blend-mode:multiply;animation:grain 1.2s steps(6) infinite}
+.grain svg{width:100%;height:100%;display:block}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-6%,-2%)}80%{transform:translate(5%,4%)}100%{transform:translate(0,0)}}
+
+.cur{position:fixed;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#FFFFFF;mix-blend-mode:difference;z-index:100;pointer-events:none;display:none;transition:width .35s cubic-bezier(.2,.8,.2,1),height .35s cubic-bezier(.2,.8,.2,1),margin .35s cubic-bezier(.2,.8,.2,1);will-change:transform}
+@media (pointer:fine){.cur{display:grid;place-items:center}}
+.cur.lnk{width:40px;height:40px;margin:-20px 0 0 -20px}
+.cur.big{width:84px;height:84px;margin:-42px 0 0 -42px;mix-blend-mode:normal;background:#2B4FFF}
+.cur-l{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#FFFFFF;opacity:0;transition:opacity .2s}
+.cur.big .cur-l{opacity:1}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:10px clamp(16px,4vw,48px);background:#FFFFFF;color:#000000;border-bottom:1px solid rgba(0,0,0,.08);transition:background .5s,color .5s,border-color .5s}
+.topbar.dark{background:#1F2226;color:#FFFFFF;border-bottom-color:rgba(255,255,255,.1)}
+.topbar a{color:inherit;text-decoration:none}
+.topbar a:hover{color:#2B4FFF}
+.topbar.dark a:hover{color:#A9C4FF}
+.mark{display:flex;align-items:flex-end;gap:3px;font-weight:700;font-size:30px;line-height:44px;letter-spacing:-.02em;transition:opacity .25s;opacity:0}
+.mark.on{opacity:1}
+.mark span{display:inline-block}
+.mark i{display:block;width:8px;height:8px;border-radius:50%;background:#FF1F3D;margin-bottom:12px}
+.nav{display:flex;gap:clamp(4px,2vw,24px)}
+.nav a{display:flex;align-items:center;min-height:44px;padding:0 8px;font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+
+.hero{position:relative;height:calc(var(--vh) * 3.6)}
+.stage{position:sticky;top:0;height:var(--vh);overflow:hidden;display:grid;place-items:center;background:#FFFFFF}
+.cam{position:absolute;inset:0;display:grid;place-items:center;will-change:transform}
+.blackout{position:absolute;inset:0;background:#0E1013;z-index:4;pointer-events:none;display:none;opacity:1;transition:opacity .18s}
+.blackout.on{display:block}
+.blackout.off{opacity:0}
+.flash{position:absolute;inset:0;background:#FFFFFF;z-index:6;pointer-events:none;display:none}
+.flash.on{display:block}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;will-change:transform;z-index:0}
+.b1{width:56vw;height:56vw;left:-10vw;top:-16vw;background:rgba(43,79,255,.16);animation:drift1 26s ease-in-out infinite alternate}
+.b2{width:48vw;height:48vw;right:-12vw;bottom:-20vw;background:rgba(110,91,255,.13);animation:drift2 31s ease-in-out infinite alternate}
+.b3{width:36vw;height:36vw;left:36vw;top:44vh;background:rgba(169,196,255,.26);animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(18vw,14vh) scale(1.15)}}
+@keyframes drift2{to{transform:translate(-16vw,-12vh) scale(1.1)}}
+@keyframes drift3{to{transform:translate(-14vw,-20vh) scale(.9)}}
+.fx{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.wordwrap{position:relative;z-index:3;transform-origin:0 0;will-change:transform}
+.wordwrap.blend .word,.wordwrap.blend .bandc{color:#FFFFFF;mix-blend-mode:difference}
+.word{position:relative;margin:0;display:flex;align-items:baseline;font-weight:700;font-size:clamp(56px,13.5vw,228px);line-height:1;letter-spacing:-.03em;color:#000000;user-select:none}
+.word.locked{animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.012)}}
+.lw{position:relative;display:inline-block}
+.ltr{position:relative;display:inline-block;will-change:transform,opacity;z-index:2;opacity:0}
+.slice{position:absolute;left:0;top:0;display:none;pointer-events:none;will-change:transform;z-index:3;color:#2B4FFF}
+.slice.on{display:inline-block}
+.dot{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em;will-change:transform}
+.bands{position:absolute;inset:0;pointer-events:none;z-index:4;display:none}
+.bands.on{display:block}
+.bandc{position:absolute;left:0;top:0;display:flex;align-items:baseline;font-weight:700;font-size:clamp(56px,13.5vw,228px);line-height:1;letter-spacing:-.03em;color:#000000;white-space:nowrap;will-change:transform,clip-path}
+.bandc i{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em}
+.hint{position:absolute;bottom:32px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:8px;z-index:3;transition:opacity .3s}
+.post{position:absolute;left:0;right:0;bottom:clamp(80px,14vh,140px);display:flex;justify-content:center;text-align:center;padding:0 16px;opacity:0;transform:translateY(10px);transition:opacity .8s .6s,transform .8s .6s;z-index:3}
+.post.on{opacity:1;transform:none}
+.post p{margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.5;color:#3A3E45;max-width:34ch;text-wrap:pretty}
+
+.apps{position:relative;z-index:5;height:calc(var(--vh) * 5);margin-top:calc(var(--vh) * -1);background:#1F2226;color:#FFFFFF;box-shadow:0 -30px 80px rgba(0,0,0,.25)}
+.apps-stage{position:sticky;top:0;height:var(--vh);overflow:hidden;display:flex;flex-direction:column;background:#1F2226}
+.apps-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:104px clamp(16px,4vw,48px) 0;position:relative;z-index:2}
+.apps-head h2{margin:0;font-size:clamp(28px,3vw,40px);letter-spacing:-.01em;font-weight:700}
+.apps .lab{color:#A0A5AD}
+.track{display:flex;flex:1;min-height:0;will-change:transform}
+.panel{position:relative;flex:none;width:100vw;height:100%;min-height:0;box-sizing:border-box;padding:16px clamp(16px,4vw,48px) 24px;display:flex;flex-direction:column;justify-content:flex-end;gap:clamp(16px,3vh,32px);overflow:hidden}
+.band{position:absolute;left:0;top:8%;white-space:nowrap;font-weight:700;font-size:clamp(120px,26vw,420px);line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.07);will-change:transform;pointer-events:none;user-select:none}
+.p-name{position:relative;margin:0;font-size:clamp(44px,11vw,160px);line-height:.92;letter-spacing:-.03em;font-weight:700;color:#FFFFFF;white-space:nowrap;will-change:transform,filter}
+.p-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:clamp(24px,5vw,80px);align-items:end}
+.p-copy{display:flex;flex-direction:column;gap:12px}
+.p-tag{margin:0;font-size:clamp(22px,2.2vw,30px);font-weight:500;line-height:1.25;color:#FFFFFF}
+.p-desc{margin:0;font-size:18px;line-height:1.55;color:#B8BCC4;max-width:48ch;text-wrap:pretty}
+.p-meta{display:flex;flex-direction:column;gap:20px;align-items:flex-start;margin-top:8px}
+.plats{display:flex;gap:18px;flex-wrap:wrap}
+.plats .lab{color:#FFFFFF}
+.visit{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:999px;background:#FFFFFF;color:#000000;text-decoration:none;font-weight:700;font-size:16px;transition:background .25s,color .25s,transform .25s}
+.visit:hover{background:#2B4FFF;color:#FFFFFF;transform:translateY(-2px)}
+.p-shot{display:flex;justify-content:flex-end;align-items:flex-end;min-width:0;perspective:1200px}
+.shot{position:relative;display:block;overflow:hidden;background:#0E1013;box-shadow:0 40px 90px rgba(0,0,0,.55);will-change:transform,clip-path;clip-path:inset(12% 10% 12% 10% round 24px);transition:clip-path 1.1s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.shot.on{clip-path:inset(0 0 0 0 round 24px)}
+.shot.phone{height:calc(var(--vh) * .44);width:auto;max-width:100%;aspect-ratio:9/19.5}
+.shot.web{height:calc(var(--vh) * .36);width:auto;max-width:100%;aspect-ratio:16/10}
+.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.shot::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.1),rgba(255,255,255,0) 45%);pointer-events:none}
+.chanbar{display:flex;gap:8px;padding:0 clamp(16px,4vw,48px) 24px;position:relative;z-index:2}
+.chan{flex:1;min-height:56px;background:transparent;border:0;border-top:2px solid rgba(255,255,255,.14);color:#A0A5AD;text-align:left;padding:14px 0 0;font:inherit;font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;transition:color .2s,border-color .2s}
+.chan:hover{color:#FFFFFF}
+.chan.on{border-top-color:#A9C4FF;color:#FFFFFF;font-weight:700}
+@media (max-width:820px){
+.nav{gap:0}.nav a{font-size:11px;letter-spacing:.08em;padding:0 7px}.nav a:last-child{display:none}
+.hero{height:var(--vh)}
+.blob{filter:blur(60px)}.b3{display:none}
+.apps{height:auto;margin-top:0;box-shadow:none}
+.apps-stage{position:static;height:auto;overflow:visible;display:block}
+.apps-head{padding-top:96px}
+.track{display:block;width:auto !important;transform:none !important}
+.panel{width:auto;min-height:var(--vh);height:auto;justify-content:center;gap:20px;padding:24px 16px 40px;opacity:1 !important;border-bottom:1px solid rgba(255,255,255,.08)}
+.band{top:auto;bottom:-6%;font-size:150px;transform:none !important}
+.p-name{transform:none !important;filter:none !important;text-shadow:none !important}
+.p-body{grid-template-columns:minmax(0,1fr);gap:20px}
+.p-shot{order:-1;justify-content:flex-start}
+.shot{transform:none !important;box-shadow:0 20px 50px rgba(0,0,0,.5);clip-path:inset(0 0 0 0 round 20px)}
+.shot.phone{height:auto;width:min(48%,calc(var(--vh) * .22))}
+.shot.web{height:auto;width:100%}
+.chanbar{display:none}
+}
+
+.msk{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.msk-in{display:block;transform:translateY(112%);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.on .msk-in{transform:none}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.on .rv,.rv.on{opacity:1;transform:none}
+.rv.d2{transition-delay:.15s}
+.wrap{padding:0 clamp(16px,4vw,48px);max-width:1344px;margin:0 auto;box-sizing:border-box}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,6vw,96px)}
+.light{background:#FFFFFF;position:relative}
+.studio{padding-top:clamp(112px,14vw,176px);padding-bottom:clamp(88px,10vw,128px);align-items:start}
+.sec h2{margin:0;font-size:clamp(36px,4.4vw,60px);line-height:1.05;letter-spacing:-.02em;font-weight:700;text-wrap:balance}
+.studio-body{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+.studio-body p{margin:0;font-size:19px;line-height:1.6;color:#3A3E45;max-width:44ch}
+.contact{padding-bottom:clamp(88px,10vw,128px)}
+.contact-head{display:flex;flex-direction:column;gap:20px;position:sticky;top:96px;align-self:start}
+.contact-head p{margin:0;font-size:19px;line-height:1.6;color:#3A3E45;max-width:34ch}
+.mail{color:#000000;font-weight:700;text-decoration:none;border-bottom:2px solid #2B4FFF}
+.mail:hover{color:#2B4FFF}
+form{display:flex;flex-direction:column;gap:24px}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#5A5E66}
+.field input,.field select,.field textarea{font:inherit;font-size:17px;color:#000000;background:#FFFFFF;border:1px solid rgba(0,0,0,.24);border-radius:8px;padding:12px 14px;min-height:48px;box-sizing:border-box;outline:none;transition:border-color .2s,box-shadow .2s;color-scheme:light}
+.field textarea{min-height:160px;resize:vertical;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#000000;box-shadow:0 0 0 3px rgba(43,79,255,.3)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.send{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;border:0;background:#000000;color:#FFFFFF;font:inherit;font-weight:700;font-size:16px;transition:background .25s,transform .25s}
+.send:hover{background:#2B4FFF;transform:translateY(-2px)}
+.send[disabled]{opacity:.6}
+.consent{font-size:15px;color:#5A5E66;line-height:1.5;margin:0}
+.thanks{display:none;flex-direction:column;gap:10px;padding-top:8px}
+.thanks.on{display:flex}
+.thanks h3{margin:0;font-size:28px;letter-spacing:-.01em}
+.thanks p{margin:0;color:#3A3E45;font-size:18px;line-height:1.55}
+.err{display:none;color:#A3001A;font-size:15px;margin:0}
+.err.on{display:block}
+
+.deep{background:#1F2226;color:#FFFFFF}
+.deep a{color:#FFFFFF}
+.deep a:hover{color:#A9C4FF}
+.deep .lab{color:#A0A5AD}
+.legal{padding-top:88px;padding-bottom:72px;display:flex;flex-direction:column;gap:48px}
+.info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 40px;margin:0}
+.info div{display:flex;flex-direction:column;gap:8px}
+.info dd{margin:0;font-size:16px;line-height:1.5}
+.ph{background:rgba(255,255,255,.1);color:#A9C4FF;padding:1px 6px;border-radius:4px;font-size:15px}
+.notice{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;border-top:1px solid rgba(255,255,255,.14);padding-top:40px}
+.notice h3{margin:0 0 10px;font-size:17px;font-weight:700}
+.notice p{margin:0;font-size:16px;line-height:1.6;color:#C3C7CD;max-width:40ch}
+.bigmark{display:flex;align-items:baseline;font-weight:700;font-size:clamp(60px,12vw,220px);line-height:1;letter-spacing:-.04em;color:#FFFFFF;padding-top:24px}
+.bigmark .msk{padding-bottom:.02em;margin-bottom:0}
+.bigmark i{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.04em}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:24px 0 32px;font-size:15px;color:#A0A5AD;border-top:1px solid rgba(255,255,255,.14);margin-top:40px}
+.foot a{text-decoration:none}
+@media (max-width:1000px){.info{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){.split,.notice,.info,.row2{grid-template-columns:minmax(0,1fr)}.contact-head{position:static}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.rv,.msk-in{opacity:1;transform:none;transition:none}.post{transition:none}.word.locked{animation:none}.blob{animation:none}.grain{animation:none}.shot{clip-path:none;transition:none}.ltr{opacity:1}}
+.no-js .ltr{opacity:1}.no-js .rv,.no-js .msk-in{opacity:1;transform:none}.no-js .mark{opacity:1}
+</style>
+</head>
+<body class="no-js">
+<script>document.body.className='';</script>
+
+<div class="grain" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><filter id="ap-noise"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#ap-noise)"></rect></svg></div>
+<div id="ap-cur" class="cur" aria-hidden="true"><span class="cur-l">Visit</span></div>
+
+<header id="ap-bar" class="topbar">
+<a id="ap-mark" class="mark" href="#ap-hero" aria-label="AwakeProd, back to top"><span>a</span><i></i></a>
+<nav class="nav" aria-label="Main">
+<a href="#ap-apps">Products</a>
+<a href="#ap-studio">Studio</a>
+<a href="#ap-contact">Contact</a>
+<a href="#ap-legal">Legal</a>
+</nav>
+</header>
+
+<main>
+<section id="ap-hero" class="hero" aria-label="AwakeProd">
+<div id="ap-stage" class="stage">
+<div id="ap-cam" class="cam">
+<div class="blob b1" aria-hidden="true"></div>
+<div class="blob b2" aria-hidden="true"></div>
+<div class="blob b3" aria-hidden="true"></div>
+<canvas id="ap-fx" class="fx" aria-hidden="true"></canvas>
+<div id="ap-dark" class="blackout" aria-hidden="true"></div>
+<div id="ap-flash" class="flash" aria-hidden="true"></div>
+<div id="ap-wrap" class="wordwrap">
+<div id="ap-bands" class="bands" aria-hidden="true"></div>
+<h1 id="ap-word" class="word" aria-label="awakeprod"></h1>
+</div>
+</div>
+<div id="ap-post" class="post"><p>An independent studio building web and mobile instruments.</p></div>
+<div id="ap-hint" class="hint lab" aria-hidden="true">Scroll<svg width="16" height="16" viewBox="0 0 24 24"><path class="ico" d="M12 5v14M6 13l6 6 6-6"></path></svg></div>
+</div>
+</section>
+
+<section id="ap-apps" class="apps" aria-label="Products">
+<div id="ap-appstage" class="apps-stage">
+<div class="apps-head">
+<h2>Products</h2>
+<span class="lab"><span id="ap-num">1</span> / 4</span>
+</div>
+<div id="ap-track" class="track">
+
+<article class="panel" data-i="0">
+<div class="band" aria-hidden="true">INVECTER&nbsp;&nbsp;INVECTER&nbsp;&nbsp;INVECTER&nbsp;&nbsp;INVECTER&nbsp;&nbsp;INVECTER&nbsp;&nbsp;INVECTER&nbsp;&nbsp;</div>
+<h3 class="p-name">Invecter</h3>
+<div class="p-body">
+<div class="p-copy">
+<p class="p-tag">Pro instruments for live operators.</p>
+<p class="p-desc">Tools, Cues, Pads, Gear. Four native apps for sound, light, video and stage. Offline. One-time purchase.</p>
+<div class="p-meta">
+<div class="plats"><span class="lab">Live AV</span><span class="lab">iOS</span><span class="lab">Android</span></div>
+<a class="visit" href="https://www.invecter.com" target="_blank" rel="noopener">Visit invecter.com<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M7 17L17 7M9 7h8v8"></path></svg></a>
+</div>
+</div>
+<div class="p-shot"><a class="shot phone" href="https://www.invecter.com" target="_blank" rel="noopener" aria-label="Open invecter.com"><img src="/img/invecter.webp" alt="Invecter Pads on iPhone" loading="lazy" width="1170" height="2532"></a></div>
+</div>
+</article>
+
+<article class="panel" data-i="1">
+<div class="band" aria-hidden="true">HEXTAZE&nbsp;&nbsp;HEXTAZE&nbsp;&nbsp;HEXTAZE&nbsp;&nbsp;HEXTAZE&nbsp;&nbsp;HEXTAZE&nbsp;&nbsp;HEXTAZE&nbsp;&nbsp;</div>
+<h3 class="p-name">Hextaze</h3>
+<div class="p-body">
+<div class="p-copy">
+<p class="p-tag">An instrument, not a filter.</p>
+<p class="p-desc">Real-time generative video with 64 frames of memory. No AI, no cloud, no account.</p>
+<div class="p-meta">
+<div class="plats"><span class="lab">Camera</span><span class="lab">iOS</span></div>
+<a class="visit" href="https://www.hextaze.com" target="_blank" rel="noopener">Visit hextaze.com<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M7 17L17 7M9 7h8v8"></path></svg></a>
+</div>
+</div>
+<div class="p-shot"><a class="shot phone" href="https://www.hextaze.com" target="_blank" rel="noopener" aria-label="Open hextaze.com"><img src="/img/hextaze.webp" alt="Hextaze camera on iPhone" loading="lazy" width="1170" height="2532"></a></div>
+</div>
+</article>
+
+<article class="panel" data-i="2">
+<div class="band" aria-hidden="true">TECHNIPATCH&nbsp;&nbsp;TECHNIPATCH&nbsp;&nbsp;TECHNIPATCH&nbsp;&nbsp;TECHNIPATCH&nbsp;&nbsp;TECHNIPATCH&nbsp;&nbsp;</div>
+<h3 class="p-name">Technipatch</h3>
+<div class="p-body">
+<div class="p-copy">
+<p class="p-tag">Draw the system.</p>
+<p class="p-desc">An editor for audiovisual system diagrams. Patch, document, share.</p>
+<div class="p-meta">
+<div class="plats"><span class="lab">AV design</span><span class="lab">Web</span></div>
+<a class="visit" href="https://www.technipatch.com" target="_blank" rel="noopener">Visit technipatch.com<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M7 17L17 7M9 7h8v8"></path></svg></a>
+</div>
+</div>
+<div class="p-shot"><a class="shot web" href="https://www.technipatch.com" target="_blank" rel="noopener" aria-label="Open technipatch.com"><img src="/img/technipatch.webp" alt="Technipatch diagram editor" loading="lazy" width="1600" height="844"></a></div>
+</div>
+</article>
+
+<article class="panel" data-i="3">
+<div class="band" aria-hidden="true">DEVANCEL&nbsp;&nbsp;DEVANCEL&nbsp;&nbsp;DEVANCEL&nbsp;&nbsp;DEVANCEL&nbsp;&nbsp;DEVANCEL&nbsp;&nbsp;DEVANCEL&nbsp;&nbsp;</div>
+<h3 class="p-name">Devancel</h3>
+<div class="p-body">
+<div class="p-copy">
+<p class="p-tag">Veille des marchés publics.</p>
+<p class="p-desc">Public tenders for audiovisual companies, spotted early.</p>
+<div class="p-meta">
+<div class="plats"><span class="lab">B2B</span><span class="lab">Web</span></div>
+<a class="visit" href="https://www.devancel.com" target="_blank" rel="noopener">Visit devancel.com<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M7 17L17 7M9 7h8v8"></path></svg></a>
+</div>
+</div>
+<div class="p-shot"><a class="shot web" href="https://www.devancel.com" target="_blank" rel="noopener" aria-label="Open devancel.com"><img src="/img/devancel.webp" alt="Devancel tender monitor" loading="lazy" width="1600" height="852"></a></div>
+</div>
+</article>
+
+</div>
+<nav id="ap-chans" class="chanbar" aria-label="Jump to a product">
+<button type="button" class="chan on" data-i="0">Invecter</button>
+<button type="button" class="chan" data-i="1">Hextaze</button>
+<button type="button" class="chan" data-i="2">Technipatch</button>
+<button type="button" class="chan" data-i="3">Devancel</button>
+</nav>
+</div>
+</section>
+
+<div class="light">
+<section id="ap-studio" class="wrap split studio sec" aria-label="Studio">
+<h2><span class="msk"><span class="msk-in">Independent software,</span></span><span class="msk"><span class="msk-in">made in France.</span></span></h2>
+<div class="studio-body rv d2">
+<p>AwakeProd designs, builds and ships its own products: instruments for live AV crews, a generative camera, a system diagram editor and a public tender monitor.</p>
+<p>One studio, from first sketch to store release.</p>
+</div>
+</section>
+
+<section id="ap-contact" class="wrap split contact sec" aria-label="Contact">
+<div class="contact-head">
+<h2><span class="msk"><span class="msk-in">Contact</span></span></h2>
+<p class="rv d2">Write to <a class="mail" href="mailto:julien@awakeprod.fr">julien@awakeprod.fr</a> or use the form.</p>
+</div>
+<div class="rv d2">
+<form id="ap-form" action="/api/contact" method="post" novalidate>
+<div class="row2">
+<div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+<div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+</div>
+<div class="field"><label for="f-topic">Subject</label>
+<select id="f-topic" name="topic">
+<option>A new project</option>
+<option>Invecter</option>
+<option>Hextaze</option>
+<option>Technipatch</option>
+<option>Devancel</option>
+<option>Press</option>
+<option>Something else</option>
+</select>
+</div>
+<div class="field"><label for="f-msg">Message</label><textarea id="f-msg" name="message" required></textarea></div>
+<div class="hp" aria-hidden="true"><label for="f-web">Website</label><input id="f-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+<p class="consent">Your details are only used to answer your message.</p>
+<p id="ap-err" class="err">Something went wrong. Please email julien@awakeprod.fr instead.</p>
+<button id="ap-send" class="send" type="submit">Send message</button>
+</form>
+<div id="ap-thanks" class="thanks" role="status">
+<h3>Message received.</h3>
+<p>Thanks. You will get an answer at the address you gave.</p>
+</div>
+</div>
+</section>
+</div>
+
+<div id="ap-deep" class="deep">
+<section id="ap-legal" class="wrap legal sec" aria-label="Mentions légales">
+<h2><span class="msk"><span class="msk-in">Mentions légales</span></span></h2>
+<dl class="info rv d2">
+<div><dt class="lab">Éditeur</dt><dd>AwakeProd, Julien Raulot, entrepreneur individuel (micro-entreprise)</dd></div>
+<div><dt class="lab">SIRET</dt><dd><span class="ph">[SIRET]</span></dd></div>
+<div><dt class="lab">Siège</dt><dd><span class="ph">[ADRESSE POSTALE]</span>, France</dd></div>
+<div><dt class="lab">Contact</dt><dd><a href="mailto:julien@awakeprod.fr">julien@awakeprod.fr</a></dd></div>
+<div><dt class="lab">Directeur de la publication</dt><dd>Julien Raulot</dd></div>
+<div><dt class="lab">TVA</dt><dd>TVA non applicable, art. 293 B du CGI</dd></div>
+<div><dt class="lab">Hébergeur</dt><dd>Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA</dd></div>
+<div><dt class="lab">Domaine</dt><dd>awakeprod.com</dd></div>
+</dl>
+<div class="notice">
+<div><h3>Propriété intellectuelle</h3><p>Les contenus de ce site (textes, logos, visuels, noms de produits) sont la propriété d’AwakeProd. Toute reproduction sans autorisation écrite est interdite.</p></div>
+<div><h3>Données personnelles</h3><p>Les informations du formulaire servent uniquement à répondre à votre demande et ne sont jamais cédées. Vous pouvez demander leur accès, rectification ou suppression à julien@awakeprod.fr (RGPD).</p></div>
+<div><h3>Produits</h3><p>Chaque application a ses propres conditions d’utilisation et sa politique de confidentialité, publiées sur son site.</p></div>
+</div>
+</section>
+<div class="wrap">
+<div id="ap-foot" class="bigmark" aria-hidden="true"><span class="msk"><span class="msk-in">awakeprod</span></span><i></i></div>
+<div class="foot">
+<span>© 2026 AwakeProd</span>
+<a href="#ap-hero">Back to top</a>
+</div>
+</div>
+</div>
+</main>
+
+<script>
+(function () {
+'use strict';
+var WORD = ['a','w','a','k','e','p','r','o','d'];
+var END = 0.45, SHRINK0 = 0.6, SHRINK1 = 0.82, NB = 16;
+var ORDER = [4, 1, 7, 0, 5, 8, 2, 6, 3];
+var DUST = ['43,79,255', '110,91,255', '169,196,255', '255,255,255', '31,34,38', '255,31,61'];
+var K = 1; // glitch intensity
+function prng(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function rnd() { return Math.random(); }
+function backOut(t) { var s = 1.25; t = t - 1; return 1 + (s + 1) * t * t * t + s * t * t; }
+function $(id) { return document.getElementById(id); }
+
+var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var stage = $('ap-stage'), cam = $('ap-cam'), wrap = $('ap-wrap'), word = $('ap-word'), bandsEl = $('ap-bands');
+var dark = $('ap-dark'), flash = $('ap-flash'), fx = $('ap-fx'), post = $('ap-post'), hint = $('ap-hint');
+var bar = $('ap-bar'), mark = $('ap-mark'), hero = $('ap-hero'), apps = $('ap-apps'), appstage = $('ap-appstage'), track = $('ap-track'), deep = $('ap-deep');
+var numEl = $('ap-num'), cur = $('ap-cur');
+var panels = Array.prototype.slice.call(track.querySelectorAll('.panel'));
+var chans = Array.prototype.slice.call(document.querySelectorAll('.chan'));
+
+// build the word once
+var L = [];
+WORD.forEach(function (ch, i) {
+  var lw = document.createElement('span'); lw.className = 'lw';
+  var ltr = document.createElement('span'); ltr.className = 'ltr'; ltr.textContent = ch; ltr.setAttribute('aria-hidden', 'true');
+  var sl = document.createElement('span'); sl.className = 'slice'; sl.textContent = ch; sl.setAttribute('aria-hidden', 'true');
+  lw.appendChild(ltr); lw.appendChild(sl); word.appendChild(lw);
+  L.push({ ltr: ltr, sl: sl });
+});
+var dotWrap = document.createElement('span'); dotWrap.className = 'lw';
+var dot = document.createElement('span'); dot.className = 'dot'; dot.setAttribute('aria-hidden', 'true');
+dotWrap.appendChild(dot); word.appendChild(dotWrap);
+var B = [];
+for (var b = 0; b < NB; b++) {
+  var bc = document.createElement('div'); bc.className = 'bandc'; bc.textContent = 'awakeprod';
+  var bi = document.createElement('i'); bc.appendChild(bi); bandsEl.appendChild(bc); B.push(bc);
+}
+
+var S = { p: 0, ps: 0, qs: 0, vs: 0, W: 1440, H: 900, mobile: false, boomAt: 0, active: -1, dark: false, mx: 0, my: 0, seed: 1 };
+var pt = 0, qt = 0, lastY = 0, mxT = 0, myT = 0, dotShift = 0, dotHome = 0, morph = { dx: 0, dy: 0, s: 0.2 };
+var mountAt = Date.now(), dust = null, heroVisible = true, dirty = true;
+var C = { x: -100, y: -100, tx: -100, ty: -100 };
+
+function measure() {
+  var H = Math.min(window.innerHeight || 900, 1000);
+  var W = document.documentElement.clientWidth || window.innerWidth || 1440;
+  var mobile = W <= 820, p = S.p, dk = false;
+  var r = hero.getBoundingClientRect();
+  if (!mobile) p = clamp(-r.top / Math.max(r.height - H, 1), 0, 1);
+  heroVisible = r.bottom > 0;
+  var r2 = apps.getBoundingClientRect();
+  qt = mobile ? 0 : clamp(-r2.top / Math.max(r2.height - H, 1), 0, 1);
+  if (r2.top < 64 && r2.bottom > 64) dk = true;
+  var r3 = deep.getBoundingClientRect(); if (r3.top < 64 && r3.bottom > 64) dk = true;
+  var first = word.firstElementChild;
+  dotShift = word.offsetWidth / 2 - (dotWrap.offsetLeft + dot.offsetWidth / 2);
+  var wf = parseFloat(getComputedStyle(word).fontSize) || 200, sc = 30 / wf;
+  dotHome = dotWrap.offsetLeft - ((first ? first.offsetWidth : 0) + 3 / sc);
+  var sr = stage.getBoundingClientRect(), ms = mark.firstElementChild, mr = ms.getBoundingClientRect();
+  var wl = sr.left + wrap.offsetLeft, wt = sr.top + wrap.offsetTop;
+  morph = { dx: mr.left - wl, dy: (mr.top + (mr.height - 30) / 2) - wt, s: sc };
+  pt = p;
+  S.p = p; S.W = W; S.H = H; S.mobile = mobile;
+  if (dk !== S.dark) { S.dark = dk; bar.className = 'topbar' + (dk ? ' dark' : ''); }
+}
+
+function startDust(W, H) {
+  if (reduced) return;
+  dust = [];
+  for (var i = 0; i < 700; i++) dust.push(spawn(W, H, true));
+}
+function spawn(W, H, initial) {
+  var ang = rnd() * Math.PI * 2, sp = initial ? 2 + Math.pow(rnd(), 2.2) * 22 : 0.3 + rnd() * 1.2;
+  var ci = rnd();
+  var col = ci < 0.42 ? DUST[0] : ci < 0.62 ? DUST[1] : ci < 0.82 ? DUST[2] : ci < 0.9 ? DUST[4] : ci < 0.97 ? DUST[3] : DUST[5];
+  return { x: W / 2 + (rnd() - 0.5) * 30, y: H / 2 + (rnd() - 0.5) * 16, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp * 0.7, r: 0.6 + rnd() * 1.6, col: col, al: 0.35 + rnd() * 0.55, tw: rnd() * 6.28 };
+}
+
+function impact(now, boomAt, W, H) {
+  if (!boomAt || reduced) { cam.style.transform = 'none'; dark.className = 'blackout'; flash.className = 'flash'; return; }
+  var t = (now - boomAt) / 1000;
+  flash.className = t < 0.07 ? 'flash on' : 'flash';
+  if (t < 1.7) {
+    var amp = 40 * Math.exp(-t * 2.3), f = 7.5 - t * 2.6;
+    var sx = amp * Math.sin(t * 6.283 * f) * (0.7 + 0.3 * Math.sin(t * 31)), sy = amp * 0.7 * Math.cos(t * 6.283 * (f * 0.8) + 1.3);
+    var rot = amp * 0.028 * Math.sin(t * 6.283 * f * 0.6);
+    cam.style.transform = 'translate3d(' + sx.toFixed(2) + 'px,' + sy.toFixed(2) + 'px,0) rotate(' + rot.toFixed(3) + 'deg)';
+  } else cam.style.transform = 'none';
+  if ((t >= 0.07 && t < 0.34) || (t >= 0.42 && t < 0.47)) dark.className = 'blackout on';
+  else if (t >= 0.34 && t < 0.42) dark.className = 'blackout on off';
+  else if (t >= 0.47 && t < 0.62) dark.className = 'blackout on off';
+  else dark.className = 'blackout';
+}
+
+function drawFx(now, W, H) {
+  if (!heroVisible || reduced) return;
+  if (fx.width !== W || fx.height !== H) { fx.width = W; fx.height = H; }
+  var ctx = fx.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  if (!S.boomAt) return;
+  var tt = (now - S.boomAt) / 1000, cx = W / 2, cy = H / 2, inv = tt < 0.3;
+  if (tt < 0.55 && K > 0) {
+    var ft = tt / 0.55, fa = 1 - ft;
+    ctx.lineWidth = 1.5;
+    for (var ri = 0; ri < 72; ri++) {
+      var ra = ri * Math.PI * 2 / 72 + prng(ri + 900) * 0.12, r0 = 60 + prng(ri + 950) * 80, r1 = r0 + (0.25 + prng(ri + 970) * 0.55) * Math.max(W, H) * Math.min(1, ft * 2.4);
+      ctx.strokeStyle = (ri % 3 === 0 ? 'rgba(43,79,255,' : ri % 3 === 1 ? 'rgba(31,34,38,' : 'rgba(169,196,255,') + (fa * 0.8).toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(cx + Math.cos(ra) * r0, cy + Math.sin(ra) * r0 * 0.7); ctx.lineTo(cx + Math.cos(ra) * r1, cy + Math.sin(ra) * r1 * 0.7); ctx.stroke();
+    }
+    var nt = Math.round(26 * fa * K);
+    for (var ti = 0; ti < nt; ti++) {
+      var ty = rnd() * H, tw = (0.15 + rnd() * 0.4) * W, tx = rnd() * (W - tw);
+      ctx.fillStyle = rnd() < 0.6 ? 'rgba(255,255,255,' + (0.5 * fa) + ')' : 'rgba(43,79,255,' + (0.45 * fa) + ')';
+      ctx.fillRect(tx, ty, tw, rnd() < 0.7 ? 1 : 2);
+    }
+    var nbk = Math.round(11 * fa * K);
+    for (var bk = 0; bk < nbk; bk++) {
+      var by = rnd() * H, bh = 6 + rnd() * 50, bw = (0.1 + rnd() * 0.5) * W, bx = rnd() * (W - bw);
+      ctx.fillStyle = rnd() < 0.5 ? 'rgba(43,79,255,' + (0.14 * fa) + ')' : 'rgba(31,34,38,' + (0.12 * fa) + ')';
+      ctx.fillRect(bx, by, bw, bh);
+    }
+  }
+  if (dust) {
+    var drag = tt < 1.2 ? 0.965 : 0.995, minSp = 0.12;
+    for (var i = 0; i < dust.length; i++) {
+      var d = dust[i];
+      d.x += d.vx; d.y += d.vy; d.vx *= drag; d.vy *= drag;
+      var sp = Math.hypot(d.vx, d.vy);
+      if (sp < minSp) { var f = minSp / (sp || 1e-6); d.vx *= f; d.vy *= f; }
+      if (d.x < -10 || d.x > W + 10 || d.y < -10 || d.y > H + 10) { dust[i] = spawn(W, H, false); continue; }
+      var dist = Math.hypot(d.x - cx, d.y - cy), fade = clamp(dist / (Math.min(W, H) * 0.12), 0, 1);
+      var twk = 0.75 + 0.25 * Math.sin(now / 900 + d.tw);
+      var col = inv && d.col === DUST[4] ? DUST[3] : d.col;
+      ctx.fillStyle = 'rgba(' + col + ',' + (d.al * fade * twk).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+}
+
+function renderHero(now) {
+  var W = S.W, H = S.H, ps = S.ps, seed = S.seed, k = reduced ? 0 : K;
+  var a = clamp((ps - 0.03) / (END - 0.03), 0, 1);
+  var n = WORD.length, stag = 0.055, win = 1 - stag * (n - 1);
+  var assembled = ps >= END;
+  var age = S.boomAt ? now - S.boomAt : -1;
+  var imp = age >= 0 && age < 1000 ? Math.exp(-age / 260) : 0;
+  var bimp = age >= 0 && age < 720 ? Math.exp(-age / 215) : 0;
+  var bandsOn = !reduced && k > 0 && bimp > 0.03;
+  var blend = age >= 0 && age < 520;
+  var R = Math.max(W, H) * 0.62;
+  var sh = S.mobile ? 0 : clamp((ps - SHRINK0) / (SHRINK1 - SHRINK0), 0, 1), she = 1 - Math.pow(1 - sh, 3);
+
+  for (var i = 0; i < n; i++) {
+    var la = clamp((a - ORDER[i] * stag) / win, 0, 1);
+    var e = reduced ? la : backOut(la), rem = 1 - e;
+    var ang = prng(i + 3) * Math.PI * 2, ox = Math.cos(ang) * R, oy = Math.sin(ang) * R * 0.8;
+    var g = clamp(rem, 0, 1) * k;
+    var jr = function (m) { return prng(seed * 0.0013 + i * 7.31 + m * 1.7) - 0.5; };
+    var tx = ox * rem + g * jr(1) * 4, ty = oy * rem + g * jr(2) * 3;
+    var split = Math.min(g * 6, 4);
+    if (imp > 0.02) { split = Math.max(split, 10 * imp * k); tx += jr(5) * 6 * imp * k; ty += jr(6) * 4 * imp * k; }
+    var hasSlice = g > 0.03 && prng(seed * 0.3 + i * 5.7) > 0.5;
+    var st = (prng(seed + i) * 60) | 0, shh = 8 + ((prng(seed * 1.3 + i) * 26) | 0);
+    var op = la <= 0 ? 0 : Math.min(1, la * 3.5);
+    if (i > 0) op *= (1 - she);
+    if (bandsOn) op = 0;
+    var el = L[i].ltr, sl = L[i].sl;
+    el.style.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0)';
+    el.style.opacity = op.toFixed(3);
+    el.style.textShadow = split > 0.4 ? split.toFixed(1) + 'px 0 rgba(43,79,255,.85), ' + (-split).toFixed(1) + 'px 0 rgba(31,34,38,.35)' : 'none';
+    el.style.clipPath = hasSlice ? 'polygon(0 0, 100% 0, 100% ' + st + '%, 0 ' + st + '%, 0 ' + (st + shh) + '%, 100% ' + (st + shh) + '%, 100% 100%, 0 100%)' : 'none';
+    if (hasSlice) {
+      sl.className = 'slice on';
+      sl.style.transform = 'translate3d(' + (tx + jr(4) * 14 * g).toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0)';
+      sl.style.opacity = op.toFixed(3);
+      sl.style.clipPath = 'inset(' + st + '% 0 ' + (100 - st - shh) + '% 0)';
+    } else sl.className = 'slice';
+  }
+  var dl = clamp((a - (n - 1) * stag) / win, 0, 1), de = 1 - Math.pow(1 - dl, 3);
+  dot.style.transform = 'translate3d(' + (dotShift * (1 - de) - dotHome * she).toFixed(1) + 'px,0,0)';
+
+  if (bandsOn) {
+    bandsEl.className = 'bands on';
+    for (var bi = 0; bi < NB; bi++) {
+      var t0 = bi * 100 / NB, h0 = 100 / NB, jb = prng(seed * 0.0021 + bi * 3.7) - 0.5, jc = prng(seed * 0.0017 + bi * 5.1) - 0.5;
+      var dx = jb * 280 * bimp * k, cs = Math.abs(jc) * 20 * bimp * k + 1, bc = B[bi];
+      bc.style.clipPath = 'inset(' + t0.toFixed(2) + '% 0 ' + (100 - t0 - h0).toFixed(2) + '% 0)';
+      bc.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,0,0)';
+      bc.style.textShadow = cs.toFixed(1) + 'px 0 rgba(43,79,255,.9), ' + (-cs).toFixed(1) + 'px 0 rgba(169,196,255,.6)';
+      bc.style.opacity = prng(seed * 0.003 + bi) > 0.08 * bimp ? '1' : '0.15';
+    }
+  } else bandsEl.className = 'bands';
+
+  wrap.className = 'wordwrap' + (blend ? ' blend' : '');
+  wrap.style.transform = sh > 0 ? 'translate3d(' + (morph.dx * she).toFixed(1) + 'px,' + (morph.dy * she).toFixed(1) + 'px,0) scale(' + (1 - (1 - morph.s) * she).toFixed(4) + ')' : 'none';
+  wrap.style.opacity = sh >= 0.985 ? '0' : '1';
+  word.className = 'word' + (assembled && age > 1500 && sh === 0 ? ' locked' : '');
+  word.style.transform = imp > 0.01 ? 'scale(' + (1 + 0.1 * imp).toFixed(4) + ')' : '';
+  mark.className = 'mark' + ((S.mobile ? assembled : sh >= 0.985) ? ' on' : '');
+  post.className = 'post' + (assembled && sh < 0.05 ? ' on' : '');
+  hint.style.opacity = Math.max(0, 1 - a * 4).toFixed(2);
+}
+
+function renderApps() {
+  var W = S.W, nA = panels.length, pos = S.qs * (nA - 1), active = Math.round(pos), k = reduced ? 0 : K;
+  var skew = clamp(-S.vs * 0.12, -7, 7);
+  if (!S.mobile) { track.style.width = (W * nA) + 'px'; track.style.transform = 'translate3d(' + (-pos * W).toFixed(1) + 'px,0,0)'; }
+  for (var i = 0; i < nA; i++) {
+    var pnl = panels[i], d = pos - i, ad = Math.min(Math.abs(d), 1), sp = ad * 5 * k, isAct = S.mobile || ad < 0.5;
+    var name = pnl.querySelector('.p-name'), band = pnl.querySelector('.band'), shot = pnl.querySelector('.shot');
+    if (!S.mobile) {
+      pnl.style.width = W + 'px';
+      pnl.style.opacity = (1 - ad * 0.65).toFixed(2);
+      name.style.transform = 'translate3d(' + (d * -220).toFixed(1) + 'px,0,0) skewX(' + skew.toFixed(2) + 'deg)';
+      name.style.filter = ad > 0.05 && k > 0 ? 'blur(' + (ad * 3 * k).toFixed(1) + 'px)' : 'none';
+      name.style.textShadow = sp > 0.5 ? sp.toFixed(1) + 'px 0 rgba(169,196,255,.7)' : 'none';
+      band.style.transform = 'translate3d(' + (-(pos * 380) - d * 180 - 40).toFixed(1) + 'px,0,0)';
+      shot.style.transform = 'translate3d(' + (d * 160).toFixed(1) + 'px,' + (-S.vs * 0.35).toFixed(1) + 'px,0) rotateX(' + (isAct ? (-S.my * 5).toFixed(2) : 0) + 'deg) rotateY(' + (isAct ? (S.mx * 7).toFixed(2) : 0) + 'deg)';
+    }
+    var cls = 'shot ' + (shot.classList.contains('phone') ? 'phone' : 'web') + (isAct ? ' on' : '');
+    if (shot.className !== cls) shot.className = cls;
+  }
+  if (active !== S.active) {
+    S.active = active; numEl.textContent = String(active + 1);
+    chans.forEach(function (c, i) { c.className = 'chan' + (i === active ? ' on' : ''); c.setAttribute('aria-current', i === active ? 'true' : 'false'); });
+  }
+}
+
+var seedAt = 0;
+function frame() {
+  var now = Date.now();
+  if (dirty) { dirty = false; measure(); }
+  var W = S.W, H = S.H;
+  if (S.mobile && S.p < 1) {
+    var t = clamp((now - mountAt - 600) / 2600, 0, 1);
+    pt = reduced ? 1 : (1 - Math.pow(1 - t, 2)); S.p = pt;
+  }
+  var kk = reduced ? 1 : 0.11;
+  var ps = S.ps + (pt - S.ps) * kk, qs = S.qs + (qt - S.qs) * kk;
+  if (S.mobile || reduced) ps = pt;
+  if (pt >= 0.999 && ps > 0.96) ps = 1;
+  if (Math.abs(pt - ps) < 0.0005) ps = pt;
+  var y = window.scrollY || 0, v = y - lastY; lastY = y;
+  S.vs = S.vs + (clamp(v, -60, 60) - S.vs) * 0.15; if (Math.abs(S.vs) < 0.05) S.vs = 0;
+  S.mx += (mxT - S.mx) * 0.08; S.my += (myT - S.my) * 0.08;
+  S.ps = ps; S.qs = qs;
+  if (ps >= END && !S.boomAt) { S.boomAt = now; startDust(W, H); }
+  else if (!S.mobile && ps < END - 0.05 && S.boomAt) { S.boomAt = 0; dust = null; }
+  var animating = !reduced && heroVisible && (ps < END || (S.boomAt && now - S.boomAt < 1100));
+  if (animating && now - seedAt > 50) { S.seed = (Math.random() * 1e6) | 0; seedAt = now; }
+  if (heroVisible) renderHero(now);
+  impact(now, S.boomAt, W, H);
+  drawFx(now, W, H);
+  renderApps();
+  if (cur) {
+    C.x += (C.tx - C.x) * 0.22; C.y += (C.ty - C.y) * 0.22;
+    cur.style.transform = 'translate3d(' + C.x.toFixed(1) + 'px,' + C.y.toFixed(1) + 'px,0)';
+  }
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('scroll', function () { dirty = true; }, { passive: true });
+window.addEventListener('resize', function () { dirty = true; });
+window.addEventListener('pointermove', function (e) {
+  C.tx = e.clientX; C.ty = e.clientY;
+  var r = appstage.getBoundingClientRect();
+  mxT = clamp((e.clientX - r.left) / r.width * 2 - 1, -1, 1); myT = clamp((e.clientY - r.top) / r.height * 2 - 1, -1, 1);
+}, { passive: true });
+document.addEventListener('pointerover', function (e) {
+  if (!cur || !e.target || !e.target.closest) return;
+  if (e.target.closest('.shot')) cur.className = 'cur big';
+  else if (e.target.closest('a,button,input,select,textarea,label')) cur.className = 'cur lnk';
+  else cur.className = 'cur';
+}, true);
+chans.forEach(function (c) {
+  c.addEventListener('click', function () {
+    var i = +c.getAttribute('data-i'), r = apps.getBoundingClientRect(), span = r.height - S.H;
+    window.scrollTo({ top: (window.scrollY || 0) + r.top + span * i / (panels.length - 1) + 2, behavior: reduced ? 'auto' : 'smooth' });
+  });
+});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { dirty = true; });
+
+// reveals
+var ids = ['ap-studio', 'ap-contact', 'ap-legal', 'ap-foot'];
+if (reduced || !window.IntersectionObserver) ids.forEach(function (id) { $(id).classList.add('on'); });
+else {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('on'); io.unobserve(en.target); } });
+  }, { rootMargin: '0px 0px -15% 0px' });
+  ids.forEach(function (id) { io.observe($(id)); });
+}
+
+// contact form
+var form = $('ap-form');
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  var btn = $('ap-send'), err = $('ap-err'); btn.disabled = true; err.className = 'err';
+  var data = {}; new FormData(form).forEach(function (v, k) { data[k] = v; });
+  fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+    .then(function (r) { if (!r.ok) throw new Error('bad'); form.style.display = 'none'; $('ap-thanks').className = 'thanks on'; })
+    .catch(function () { err.className = 'err on'; btn.disabled = false; });
+});
+
+measure();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

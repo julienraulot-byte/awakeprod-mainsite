@@ -55,6 +55,11 @@ a{color:#A9C4FF}a:hover{color:#FFFFFF}
 .stage{position:sticky;top:0;height:var(--vh);overflow:hidden;display:grid;place-items:center;background:#0E1013}
 .intro{position:absolute;inset:0;z-index:1}
 .intro::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(14,16,19,0) 55%,rgba(14,16,19,.6) 100%)}
+.ai-wm{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.ai-word{margin:0;display:flex;align-items:baseline;font-weight:700;font-size:clamp(52px,16.5vw,172px);line-height:1;letter-spacing:-.03em;color:#FFFFFF;white-space:nowrap;opacity:0;text-shadow:0 0 .35em rgba(169,196,255,.28);user-select:none}
+.ai-word .l{display:inline-block}
+.ai-word .dot{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em;box-shadow:0 0 .25em rgba(255,31,61,.45)}
+.ai-word .bl{display:inline-block;width:0;height:0;vertical-align:baseline}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .nojs-word{display:none;position:relative;z-index:2;font-weight:700;font-size:clamp(48px,15vw,172px);line-height:1;letter-spacing:-.03em;color:#FFFFFF;white-space:nowrap}
 .nojs-word i{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em}
@@ -363,21 +368,16 @@ form{display:flex;flex-direction:column;gap:24px}
 </main>
 
 <script>
-/* Intro: particle singularity -> impact -> solid 3D wordmark (three.js r128, loaded async by the page script) */
+/* Intro: "Singularity" (particles -> accretion disk -> collapse -> impact -> crisp wordmark), three.js r128 loaded async by the page script */
 (function () {
   'use strict';
   // AwakeIntro = { mount(el, opts), setProgress(p), play(ms), setActive(on), isWebGL }. Needs window.THREE (r128) at mount time, else CSS fallback.
-  var I_P = 0.535, WORD = 'awakeprod', LSP = -0.03, DOT_R = 0.095, GS = 170, T_DEF = 7200;
-  var FONT = '700 ' + GS + 'px "Google Sans",system-ui,sans-serif';
+  var I_P = 0.535, T_DEF = 6800;
   var reduced = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
-
   function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
   function ss(a, b, x) { var t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
   function lerp(a, b, t) { return a + (b - a) * t; }
   function eio(x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
-  function eo3(t) { return 1 - Math.pow(1 - t, 3); }
-  function eBack(t, s) { t -= 1; return 1 + (s + 1) * t * t * t + s * t * t; }
-  function rng(seed) { return function () { seed = (seed + 0x6D2B79F5) | 0; var t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
   var S = null, pend = { p: null, play: null, active: true };
   var api = {
@@ -395,485 +395,400 @@ form{display:flex;flex-direction:column;gap:24px}
     return Promise.race([f, new Promise(function (r) { setTimeout(r, 2500); })]).catch(function () {});
   }
 
-  function fallback(el, opts) {
+  // the crisp DOM wordmark: particles land on it, then it cross-fades in (also the no-WebGL fallback)
+  function wordmark(el) {
+    var wm = document.createElement('div'); wm.className = 'ai-wm';
+    var h = '<div class="ai-word">';
+    'awakeprod'.split('').forEach(function (c) { h += '<span class="l">' + c + '</span>'; });
+    wm.innerHTML = h + '<span class="dot"></span><span class="bl"></span></div>';
+    el.appendChild(wm);
+    return wm.firstChild;
+  }
+  function wordInfo(el, word) {
+    var sr = el.getBoundingClientRect(), wr = word.getBoundingClientRect();
+    return { wordTop: wr.top - sr.top, wordBottom: wr.bottom - sr.top, fs: parseFloat(getComputedStyle(word).fontSize) || 100 };
+  }
+  function fitWord(el, word) {
+    word.style.fontSize = '';
+    var avail = el.clientWidth - 32, w = word.getBoundingClientRect().width;
+    if (w > avail * 0.92) word.style.fontSize = (parseFloat(getComputedStyle(word).fontSize) * avail * 0.92 / w).toFixed(2) + 'px';
+  }
+
+  function fallback(el, opts, word) {
     api.isWebGL = false;
-    var d = document.createElement('div');
-    d.setAttribute('aria-hidden', 'true');
-    d.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 clamp(48px,15vw,172px)/1 "Google Sans",system-ui,sans-serif;letter-spacing:-.03em;color:#FFFFFF;white-space:nowrap';
-    d.innerHTML = '<span>awakeprod<i style="display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em"></i></span>';
-    el.appendChild(d);
-    var rep = function () {
-      var fs = parseFloat(getComputedStyle(d).fontSize) || 60, H = el.clientHeight;
-      if (opts.onProgress) opts.onProgress(1, { wordTop: H / 2 - fs * .5, wordBottom: H / 2 + fs * .5, fs: fs });
-    };
+    word.style.opacity = '1';
+    var rep = function () { fitWord(el, word); if (opts.onProgress) opts.onProgress(1, wordInfo(el, word)); };
     S = { setP: rep, play: rep, setActive: function () {} };
-    rep(); if (opts.onReady) opts.onReady(api);
+    rep(); whenFont().then(rep);
+    if (opts.onReady) opts.onReady(api);
   }
 
   function mount(el, opts) {
     opts = opts || {};
     if (S) return api;
     if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
-    var THREE = window.THREE, renderer, canvas;
-    if (!THREE) { fallback(el, opts); return api; }
-    canvas = document.createElement('canvas');
+    var THREE = window.THREE, renderer, canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
     canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block';
     el.appendChild(canvas);
+    var word = wordmark(el);
+    if (!THREE) { el.removeChild(canvas); fallback(el, opts, word); return api; }
     try {
-      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false, powerPreference: 'high-performance' });
       if (!renderer.getContext()) throw new Error('no gl');
-    } catch (e) { el.removeChild(canvas); fallback(el, opts); return api; }
+    } catch (e) { el.removeChild(canvas); fallback(el, opts, word); return api; }
     api.isWebGL = true;
     S = {};
-    whenFont().then(function () { start3D(THREE, el, renderer, opts); });
+    whenFont().then(function () { start3D(THREE, el, renderer, word, opts); });
     return api;
   }
 
-  /* ---------- glyph tracing: canvas -> marching squares -> RDP -> THREE.Shape (em units, baseline y=0) ---------- */
-  function rdp(pts, eps) {
-    if (pts.length < 3) return pts.slice();
-    var a = pts[0], b = pts[pts.length - 1], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1e-9, md = 0, mi = 0;
-    for (var i = 1; i < pts.length - 1; i++) { var d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + b[0] * a[1] - b[1] * a[0]) / len; if (d > md) { md = d; mi = i; } }
-    if (md <= eps) return [a, b];
-    return rdp(pts.slice(0, mi + 1), eps).slice(0, -1).concat(rdp(pts.slice(mi), eps));
-  }
-  function simplifyClosed(L, eps) {
-    var p0 = L[0], far = 0, fd = 0;
-    for (var i = 1; i < L.length; i++) { var d = Math.hypot(L[i][0] - p0[0], L[i][1] - p0[1]); if (d > fd) { fd = d; far = i; } }
-    return rdp(L.slice(0, far + 1), eps).slice(0, -1).concat(rdp(L.slice(far).concat([p0]), eps).slice(0, -1));
-  }
-  function area(P) { var s = 0; for (var i = 0, n = P.length; i < n; i++) { var a = P[i], b = P[(i + 1) % n]; s += a[0] * b[1] - b[0] * a[1]; } return s / 2; }
-  function inside(pt, P) {
-    var c = false;
-    for (var i = 0, j = P.length - 1; i < P.length; j = i++) {
-      var xi = P[i][0], yi = P[i][1], xj = P[j][0], yj = P[j][1];
-      if (((yi > pt[1]) !== (yj > pt[1])) && (pt[0] < (xj - xi) * (pt[1] - yi) / (yj - yi) + xi)) c = !c;
-    }
-    return c;
-  }
-  var MS = { 1: [[3, 2]], 2: [[2, 1]], 3: [[3, 1]], 4: [[0, 1]], 6: [[0, 2]], 7: [[3, 0]], 8: [[3, 0]], 9: [[0, 2]], 11: [[0, 1]], 12: [[3, 1]], 13: [[2, 1]], 14: [[3, 2]] };
-  function traceGlyph(THREE, ch) {
-    var c = document.createElement('canvas'), x = c.getContext('2d');
-    x.font = FONT;
-    var m = x.measureText(ch), pad = 6;
-    var bl = Math.ceil(m.actualBoundingBoxLeft || 0), br = Math.ceil(m.actualBoundingBoxRight || m.width);
-    var asc = Math.ceil(m.actualBoundingBoxAscent || GS * .8), des = Math.ceil(m.actualBoundingBoxDescent || GS * .25);
-    var w = bl + br + pad * 2, h = asc + des + pad * 2;
-    c.width = w; c.height = h;
-    x.font = FONT; x.fillStyle = '#fff'; x.textBaseline = 'alphabetic';
-    var ox = pad + bl, oy = pad + asc;
-    x.fillText(ch, ox, oy);
-    var data = x.getImageData(0, 0, w, h).data, v = new Float32Array(w * h), i;
-    for (i = 0; i < w * h; i++) v[i] = data[i * 4 + 3] / 255;
-    var segs = [], adj = {};
-    function eid(cx, cy, e) { return e === 0 ? (cy * w + cx) * 2 : e === 2 ? ((cy + 1) * w + cx) * 2 : e === 3 ? (cy * w + cx) * 2 + 1 : (cy * w + cx + 1) * 2 + 1; }
-    function add(a, b) { var k = segs.length; segs.push([a, b]); (adj[a] = adj[a] || []).push(k); (adj[b] = adj[b] || []).push(k); }
-    for (var cy = 0; cy < h - 1; cy++) for (var cx = 0; cx < w - 1; cx++) {
-      var tl = v[cy * w + cx], tr = v[cy * w + cx + 1], brv = v[(cy + 1) * w + cx + 1], blv = v[(cy + 1) * w + cx];
-      var k = (tl >= .5 ? 8 : 0) | (tr >= .5 ? 4 : 0) | (brv >= .5 ? 2 : 0) | (blv >= .5 ? 1 : 0), list;
-      if (k === 0 || k === 15) continue;
-      if (k === 5 || k === 10) { var ctr = (tl + tr + brv + blv) / 4 >= .5; list = (k === 5) === ctr ? [[0, 3], [2, 1]] : [[0, 1], [3, 2]]; }
-      else list = MS[k];
-      for (var s = 0; s < list.length; s++) add(eid(cx, cy, list[s][0]), eid(cx, cy, list[s][1]));
-    }
-    function pos(id) {
-      var vert = id & 1, cell = id >> 1, px = cell % w, py = (cell - px) / w, a, b;
-      if (!vert) { a = v[py * w + px]; b = v[py * w + px + 1]; return [px + clamp((.5 - a) / ((b - a) || 1e-6), 0, 1), py]; }
-      a = v[py * w + px]; b = v[(py + 1) * w + px]; return [px, py + clamp((.5 - a) / ((b - a) || 1e-6), 0, 1)];
-    }
-    var used = new Uint8Array(segs.length), loops = [];
-    for (var s0 = 0; s0 < segs.length; s0++) {
-      if (used[s0]) continue;
-      var loop = [], start = segs[s0][0], e = segs[s0][1], guard = 0;
-      used[s0] = 1; loop.push(pos(start));
-      while (e !== start && guard++ < 100000) {
-        loop.push(pos(e));
-        var nb = adj[e], nx = -1;
-        for (var q = 0; q < nb.length; q++) if (!used[nb[q]]) { nx = nb[q]; break; }
-        if (nx < 0) break;
-        used[nx] = 1; e = segs[nx][0] === e ? segs[nx][1] : segs[nx][0];
-      }
-      if (loop.length > 6) loops.push(loop);
-    }
-    var polys = [];
-    loops.forEach(function (L) {
-      if (Math.abs(area(L)) < 6) return;
-      var sp = simplifyClosed(L, .4).map(function (p) { return [(p[0] - ox) / GS, (oy - p[1]) / GS]; });
-      if (sp.length >= 3) polys.push(sp);
-    });
-    var depth = polys.map(function (P, i) { var d = 0; for (var j = 0; j < polys.length; j++) if (j !== i && inside(P[0], polys[j])) d++; return d; });
-    var V2 = function (p) { return new THREE.Vector2(p[0], p[1]); }, shapes = [];
-    polys.forEach(function (P, i) {
-      if (depth[i] % 2) return;
-      var sh = new THREE.Shape(P.map(V2));
-      polys.forEach(function (Hh, j) { if (depth[j] === depth[i] + 1 && inside(Hh[0], P)) sh.holes.push(new THREE.Path(Hh.map(V2))); });
-      shapes.push(sh);
-    });
-    return shapes;
-  }
-  // smooth side/bevel normals (faces meeting under ~40deg); lids keep their flat normal so the faces stay clean
-  function smoothNormals(THREE, g) {
-    var P = g.attributes.position, N = g.attributes.normal, n = P.count, map = {}, keys = new Array(n), i;
-    for (i = 0; i < n; i++) { var k = Math.round(P.getX(i) * 4e3) + '_' + Math.round(P.getY(i) * 4e3) + '_' + Math.round(P.getZ(i) * 4e3); keys[i] = k; (map[k] = map[k] || []).push(i); }
-    var out = new Float32Array(n * 3), lim = Math.cos(40 * Math.PI / 180), lid = new Uint8Array(n);
-    g.groups.forEach(function (gr) { if (gr.materialIndex === 0) for (var q = gr.start; q < gr.start + gr.count; q++) lid[q] = 1; });
-    for (i = 0; i < n; i++) {
-      var ax = N.getX(i), ay = N.getY(i), az = N.getZ(i), sx = 0, sy = 0, sz = 0, grp = map[keys[i]];
-      if (lid[i]) { out[i * 3] = ax; out[i * 3 + 1] = ay; out[i * 3 + 2] = az; continue; }
-      for (var j = 0; j < grp.length; j++) { if (lid[grp[j]]) continue; var bx = N.getX(grp[j]), by = N.getY(grp[j]), bz = N.getZ(grp[j]); if (ax * bx + ay * by + az * bz >= lim) { sx += bx; sy += by; sz += bz; } }
-      var l = Math.hypot(sx, sy, sz) || 1; out[i * 3] = sx / l; out[i * 3 + 1] = sy / l; out[i * 3 + 2] = sz / l;
-    }
-    g.setAttribute('normal', new THREE.BufferAttribute(out, 3));
-  }
-
-  /* ---------- particle shaders (A), post-impact word particles now burst + feed the trail ---------- */
-  var VERT = [
-    'uniform float uP, uTime, uR, uU, uD, uH, uZb, uProj, uDpr, uMaxPt, uSize;',
-    'uniform vec2 uView;',
-    'attribute vec3 aTarget; attribute vec4 aSeed; attribute float aRole;',
-    'varying vec3 vCol; varying float vA; varying vec2 vDir; varying float vHalf; varying float vRad;',
-    '#define TAU 6.2831853',
-    '#define I_P 0.535',
-    'const vec3 BLUE = vec3(0.169, 0.31, 1.0);',
-    'const vec3 VIOLET = vec3(0.431, 0.357, 1.0);',
-    'const vec3 SOFT = vec3(0.663, 0.769, 1.0);',
-    'const vec3 RED = vec3(1.0, 0.122, 0.239);',
-    'float e3(float x){ return x < .5 ? 4.*x*x*x : 1. - pow(-2.*x + 2., 3.)/2.; }',
-    'float eo(float x){ float y = 1. - x; return 1. - y*y*y; }',
-    'vec3 sdir(vec2 s){ float z = s.x*2. - 1.; float a = s.y*TAU; float r = sqrt(max(0., 1. - z*z)); return vec3(r*cos(a), z, r*sin(a)); }',
-    'vec3 rotY(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(c*v.x + s*v.z, v.y, -s*v.x + c*v.z); }',
-    'vec3 rotZ(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(c*v.x - s*v.y, s*v.x + c*v.y, v.z); }',
-    'float compressF(float p){ float cp = smoothstep(0.36, 0.47, p); return mix(1., 0.035, cp*cp)*mix(1., 0.25, smoothstep(0.47, I_P, p)); }',
-    'vec3 diskPath(vec3 s, float p, vec4 sd, out float g, out float r){',
-    '  float gs = 0.02 + sd.x*0.15;',
-    '  g = smoothstep(gs, 0.37, p);',
-    '  float gg = g*g*(3. - 2.*g);',
-    '  float rs = length(s.xz); float ths = atan(s.z, s.x);',
-    '  float rd = uR*mix(0.36, 1.0, pow(sd.y, 0.75));',
-    '  r = mix(rs, rd, gg)*compressF(p);',
-    '  float rn = max(r/uR, 0.2);',
-    '  float th = ths + 5.5*max(p - gs, 0.)*pow(rn, -1.5)*(0.25 + 0.75*gg);',
-    '  float y = mix(s.y, (sd.z - .5)*0.06*r, pow(gg, 1.3));',
-    '  return rotZ(vec3(r*cos(th), y, r*sin(th)), -0.13*gg);',
-    '}',
-    'vec4 viewPos(float p, out float a, out float heat, out vec3 col, out float sz){',
-    '  vec4 sd = aSeed;',
-    '  float role = mod(floor(aRole + .5), 10.);',
-    '  float c = compressF(p);',
-    '  float dimG = 1. - 0.5*smoothstep(0.40, 0.53, p);',
-    '  float fin = smoothstep(0., 0.07, p);',
-    '  vec3 pos = vec3(0.); float g = 0., r = 0.;',
-    '  a = 1.; heat = 0.; sz = 1.;',
-    '  col = mix(mix(BLUE, VIOLET, sd.w), SOFT, sd.z*0.55);',
-    '  vec4 C = modelViewMatrix*vec4(0., 0., 0., 1.);',
-    '  float RE = uR*0.27*pow(c, 0.85);',
-    '  if (role < 1.5) {',
-    '    if (p < I_P) {',
-    '      vec3 s = position + (sd.xyz - .5)*0.12*uU*p;',
-    '      pos = diskPath(s, p, sd, g, r);',
-    '      heat = g*smoothstep(0.75*uR, 0.2*uR, r)*0.9 + (1. - c)*0.6;',
-    '      a = fin*mix(0.004, 1., c)*dimG*0.8;',
-    '    } else {',
-    // burst outward with drag and buoyancy; most particles dissipate, a thin fraction becomes the trail behind the word
-    '      float e = clamp((p - I_P)/(1. - I_P), 0., 1.);',
-    '      vec3 dir = normalize(sdir(sd.xy)*0.9 + vec3(aTarget.xy/uU, 0.)*0.8 + vec3(0., 0.15, sd.w < 0.18 ? 0.55 : -0.5));',
-    '      float rb = uR*(0.5 + 1.6*sd.z)*(1. - exp(-e*8.));',
-    '      vec3 bp = rotY(dir*rb, e*(sd.x - .5));',
-    '      bp.y += uR*0.7*e*e*(0.2 + sd.w);',
-    '      heat = pow(1. - e, 4.)*0.95;',
-    '      if (role < 0.5) {',
-    '        pos = bp;',
-    '        a = 1.1*pow(1. - smoothstep(0., 0.7, e), 1.5);',
-    '      } else {',
-    '        float k = e3(smoothstep(0.12 + 0.2*sd.w, 0.55 + 0.3*sd.x, e));',
-    '        vec3 home = vec3(aTarget.xy*1.1, -uR*(0.45 + 0.35*sd.z));',
-    '        pos = mix(bp, home, k);',
-    '        pos.xy += vec2(sin(uTime*0.9 + sd.x*40.), cos(uTime*0.7 + sd.y*40.))*0.004*uU*k;',
-    '        a = mix(1.1, 0.45, k);',
-    '        col = mix(col, SOFT, 0.5*k);',
-    '        float tw = smoothstep(0.74, 1., p);',
-    '        float ph = fract(sd.w*7.13 + uTime*0.035);',
-    '        vec3 off = vec3((sd.x - .5)*0.8*uU*ph + sin(ph*5. + sd.y*TAU)*0.06*uR, ph*uR*1.15, -ph*ph*uR*1.8);',
-    '        pos += off*tw;',
-    '        a = mix(a, smoothstep(0., 0.18, ph)*(1. - ph)*0.9, tw);',
-    '        col = mix(col, mix(SOFT, VIOLET, ph), tw);',
-    '        heat *= 1. - tw*0.7;',
-    '      }',
-    '    }',
-    '  } else if (role < 2.5) {',
-    '    vec3 s0 = position;',
-    '    vec3 s = s0 + vec3(sin(uTime*.07 + sd.x*TAU), cos(uTime*.05 + sd.y*TAU), sin(uTime*.06 + sd.z*TAU))*0.06*uU;',
-    '    float d0 = length(s0);',
-    '    float ee = clamp((p - I_P)/0.3, 0., 1.);',
-    '    float Rs = uD*1.9*eo(ee);',
-    '    float passed = smoothstep(d0 - 0.3*uR, d0 + 0.3*uR, Rs)*step(I_P, p);',
-    '    float pull = 0.3*smoothstep(0.04, 0.5, p)/(1. + d0/(2.*uR))*(1. - passed);',
-    '    s = rotY(s, pull*2.)*(1. - pull*0.6);',
-    '    s += normalize(s0 + 1e-4)*passed*uR*(0.25 + 0.6*sd.z)*(1. + d0/uD);',
-    '    pos = s;',
-    '    float wave = exp(-abs(Rs - d0)/(0.25*uR + 0.06*d0))*step(I_P, p)*(1. - ee);',
-    '    a = (0.16 + 0.38*sd.w)*fin*dimG + wave*1.1;',
-    '    a *= mix(1., 0.65, smoothstep(0.85, 1., p));',
-    '    heat = wave*0.7;',
-    '    sz = 0.7 + 2.2*sd.x*sd.x*sd.x;',
-    '  } else {',
-    '    if (p < I_P) {',
-    '      pos = diskPath(position, p, sd, g, r);',
-    '      heat = g*smoothstep(0.75*uR, 0.2*uR, r)*0.9 + (1. - c)*0.6;',
-    '      a = fin*mix(0.004, 1., c)*dimG*0.6;',
-    '      if (role > 6.5) {',
-    '        float ang = sd.x*TAU + p*9.;',
-    '        vec3 rv = vec3(cos(ang), sin(ang), 0.)*RE*(1.03 + (sd.z - .5)*0.05);',
-    '        a = smoothstep(0.22, 0.34, p)*(0.35 + 0.5*(1. - c))*mix(1., 0.5, smoothstep(0.47, I_P, p));',
-    '        heat = 0.75; col = SOFT; sz = 0.8;',
-    '        return vec4(C.xyz + rv, 1.);',
-    '      }',
-    '    } else if (role < 3.5 || role > 6.5) {',
-    '      float ee = clamp((p - I_P)/0.3, 0., 1.);',
-    '      float m = sd.w < .45 ? 1. : (sd.w < .8 ? .6 : .34);',
-    '      if (role > 6.5) m = 1.12;',
-    '      float Rs = uD*1.9*eo(ee)*m + uR*0.03;',
-    '      pos = sdir(sd.xy)*Rs*(1. + (sd.z - .5)*0.05);',
-    '      a = pow(1. - ee, 1.4)*0.72;',
-    '      heat = pow(1. - ee, 2.)*0.8;',
-    '      col = mix(SOFT, VIOLET, sd.z);',
-    '    } else {',
-    '      float ec = clamp((p - I_P)/(0.95 - I_P), 0., 1.);',
-    '      float Hc = uH*eo(ec);',
-    '      float fadeL = smoothstep(I_P, I_P + 0.03, p)*mix(1., 0.24, smoothstep(0.72, 1., p));',
-    '      if (role < 4.5) {',
-    '        float h = sd.x;',
-    '        float ang = sd.y*TAU + ec*2.5 + h*4. + uTime*0.15;',
-    '        float rc = uR*(0.04 + 0.07*h*h + 0.03*sd.z)*(0.5 + 0.7*eo(ec));',
-    '        pos = vec3(rc*cos(ang), Hc*pow(h, 0.85), rc*sin(ang) + uZb);',
-    '        a = fadeL*0.6*smoothstep(0., 0.12, h);',
-    '        heat = (1. - ec)*0.6*(1. - h);',
-    '        col = mix(VIOLET, SOFT, h*0.7);',
-    '      } else if (role < 5.5) {',
-    '        float Rt = uR*(0.1 + 0.42*eo(ec));',
-    '        float rt = Rt*0.34;',
-    '        float p1 = sd.x*TAU + ec*0.5 + uTime*0.05;',
-    '        float p2 = sd.y*TAU - ec*6. - uTime*0.3;',
-    '        float rr = Rt + rt*cos(p2)*(0.8 + 0.4*sd.z);',
-    '        pos = vec3(rr*cos(p1), Hc + rt*sin(p2), rr*sin(p1) + uZb);',
-    '        a = fadeL*0.75;',
-    '        heat = (1. - ec)*0.5;',
-    '        col = mix(SOFT, VIOLET, 0.5 + 0.5*sin(p2));',
-    '      } else {',
-    '        float eg = clamp((p - I_P)/0.33, 0., 1.);',
-    '        float Rg = uR*(0.15 + 4.0*eo(eg))*(1. + (sd.z - .5)*0.03);',
-    '        pos = vec3(Rg*cos(sd.x*TAU), -0.03*uR*sd.y, Rg*sin(sd.x*TAU));',
-    '        a = pow(1. - eg, 1.8)*0.8;',
-    '        heat = (1. - eg)*0.6;',
-    '        col = SOFT;',
-    '      }',
-    '    }',
-    '  }',
-    '  if (aRole > 9.5) { col = RED; heat *= 0.3; a *= 1.25; }',
-    '  col = mix(col, vec3(1.), clamp(heat, 0., 1.));',
-    '  vec4 mv = modelViewMatrix*vec4(pos, 1.);',
-    '  float Ls = smoothstep(0.08, 0.3, p)*step(p, I_P);',
-    '  if (Ls > 0.) {',
-    '    float behind = smoothstep(0., 0.35*uR, C.z - mv.z);',
-    '    float k = mv.z/C.z;',
-    '    vec2 cxy = C.xy*k; vec2 d = mv.xy - cxy; float dl = length(d); float REp = RE*k;',
-    '    float nd = 0.5*(dl + sqrt(dl*dl + 4.*REp*REp));',
-    '    mv.xy = cxy + d/max(dl, 1e-5)*mix(dl, nd, behind*Ls);',
-    '  }',
-    '  return mv;',
-    '}',
-    'void main(){',
-    '  float a, heat, sz, a2, h2, s2; vec3 col, c2;',
-    '  vec4 mv = viewPos(uP, a, heat, col, sz);',
-    '  vec4 mvb = viewPos(uP - 0.006, a2, h2, c2, s2);',
-    '  vec4 cp = projectionMatrix*mv;',
-    '  vec4 cpb = projectionMatrix*mvb;',
-    '  float dist = -mv.z;',
-    '  vec2 vel = vec2(0.);',
-    '  if (cp.w > 0.05 && cpb.w > 0.05) vel = (cp.xy/cp.w - cpb.xy/cpb.w)*0.5*uView;',
-    '  float len = min(length(vel)*1.8, 46.*uDpr);',
-    '  float core = uSize*sz*uProj/max(dist, 0.01);',
-    '  float lowA = clamp(core/(1.1*uDpr), 0.25, 1.);',
-    '  core = clamp(core, 1.1*uDpr, 14.*uDpr);',
-    '  float ps = min(core + len, uMaxPt);',
-    '  len = max(ps - core, 0.);',
-    '  vec2 dir = len > 0.5 ? normalize(vel) : vec2(1., 0.);',
-    '  cp.xy -= dir*len*0.5/(0.5*uView)*cp.w;',
-    '  gl_Position = cp;',
-    '  gl_PointSize = ps;',
-    '  vDir = dir; vHalf = 0.5*len/ps; vRad = 0.5*core/ps;',
-    '  float nearF = smoothstep(0.04*uD, 0.35*uD, dist);',
-    '  float farF = clamp(1.5 - dist/(2.4*uD), 0.25, 1.);',
-    '  vA = a*lowA*nearF*farF*core/(core + len*0.55);',
-    '  vCol = col;',
-    '}'
-  ].join('\n');
-  var FRAG = [
-    'precision mediump float;',
-    'varying vec3 vCol; varying float vA; varying vec2 vDir; varying float vHalf; varying float vRad;',
-    'void main(){',
-    '  vec2 q = gl_PointCoord - 0.5; q.y = -q.y;',
-    '  float t = clamp(dot(q, vDir), -vHalf, vHalf);',
-    '  float d = length(q - vDir*t)/max(vRad, 1e-4);',
-    '  float a = 1. - smoothstep(0.15, 1., d); a *= a;',
-    '  if (vHalf > 0.001) a *= mix(0.3, 1., (t/vHalf + 1.)*0.5);',
-    '  a *= vA;',
-    '  if (a < 0.004) discard;',
-    '  gl_FragColor = vec4(vCol, a);',
-    '}'
-  ].join('\n');
-
-  /* ============================== 3D stage ============================== */
-  function start3D(THREE, el, renderer, opts) {
+  function start3D(THREE, el, renderer, word, opts) {
     renderer.setClearColor(0x0E1013, 1);
     var scene = new THREE.Scene();
     var FOV = 35, TANH = Math.tan(FOV * Math.PI / 360);
     var camera = new THREE.PerspectiveCamera(FOV, 1, 0.05, 400);
     var points = null, mat = null, geo = null;
-    var W = 0, H = 0, D = 10, U = 2, R = 2, colH = 2, dpr = 1, small = false, builtW = -1, builtH = -1, fs = 100;
-    var maxPt = 64, gl = renderer.getContext();
-    try { maxPt = Math.min(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)[1], 96); } catch (e) {}
+    var W = 0, H = 0, D = 10, U = 2, R = 2, colH = 2, dpr = 1, small = false, builtWidth = -1;
+    var maxPt = 64;
+    try { var rng = renderer.getContext().getParameter(renderer.getContext().ALIASED_POINT_SIZE_RANGE); maxPt = Math.min(rng[1], 96); } catch (e) {}
 
+    // ---------- glow sprites (impact flash + lingering halo) ----------
     function glowTex(stops) {
       var c = document.createElement('canvas'); c.width = c.height = 128;
       var x = c.getContext('2d'), g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
       stops.forEach(function (s) { g.addColorStop(s[0], s[1]); });
       x.fillStyle = g; x.fillRect(0, 0, 128, 128);
-      return new THREE.CanvasTexture(c);
+      var t = new THREE.CanvasTexture(c); return t;
     }
-    function mkSprite(tex, depth) {
-      var s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: depth, transparent: true, opacity: 0 }));
-      scene.add(s); return s;
+    function mkSprite(tex) {
+      var m = new THREE.SpriteMaterial({ map: tex, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true, opacity: 0 });
+      var s = new THREE.Sprite(m); scene.add(s); return s;
     }
-    var core = mkSprite(glowTex([[0, 'rgba(255,255,255,1)'], [0.12, 'rgba(220,230,255,.75)'], [0.35, 'rgba(120,140,255,.18)'], [1, 'rgba(43,79,255,0)']]), false);
-    var halo = mkSprite(glowTex([[0, 'rgba(110,91,255,.55)'], [0.4, 'rgba(60,70,200,.18)'], [1, 'rgba(43,79,255,0)']]), true);
-    core.renderOrder = 3; halo.renderOrder = 0;
+    var core = mkSprite(glowTex([[0, 'rgba(255,255,255,1)'], [0.12, 'rgba(220,230,255,.75)'], [0.35, 'rgba(120,140,255,.18)'], [1, 'rgba(43,79,255,0)']]));
+    var halo = mkSprite(glowTex([[0, 'rgba(110,91,255,.55)'], [0.4, 'rgba(60,70,200,.18)'], [1, 'rgba(43,79,255,0)']]));
+    core.renderOrder = 2; halo.renderOrder = 0;
 
-    /* lights: key upper-left, cool blue rim from behind, low ambient, a burst light from the core at impact */
-    scene.add(new THREE.AmbientLight(0xB8C4E0, 0.14));
-    var key = new THREE.DirectionalLight(0xFFFFFF, 1.2); key.position.set(-1.1, 1.35, 1.6); scene.add(key);
-    var rim = new THREE.DirectionalLight(0x5F7CFF, 1.7); rim.position.set(1.0, 0.8, -1.5); scene.add(rim);
-    var burstL = new THREE.PointLight(0xCFDCFF, 0, 0); scene.add(burstL);
+    // ---------- shaders ----------
+    var VERT = [
+      'uniform float uP, uTime, uR, uU, uD, uH, uZb, uProj, uDpr, uMaxPt, uSize;',
+      'uniform vec2 uView;',
+      'attribute vec3 aTarget; attribute vec4 aSeed; attribute float aRole;',
+      'varying vec3 vCol; varying float vA; varying vec2 vDir; varying float vHalf; varying float vRad;',
+      '#define PI 3.14159265',
+      '#define TAU 6.2831853',
+      '#define I_P 0.535',
+      'const vec3 BLUE = vec3(0.169, 0.31, 1.0);',
+      'const vec3 VIOLET = vec3(0.431, 0.357, 1.0);',
+      'const vec3 SOFT = vec3(0.663, 0.769, 1.0);',
+      'const vec3 RED = vec3(1.0, 0.122, 0.239);',
+      'float e3(float x){ return x < .5 ? 4.*x*x*x : 1. - pow(-2.*x + 2., 3.)/2.; }',
+      'float eo(float x){ float y = 1. - x; return 1. - y*y*y; }',
+      'vec3 sdir(vec2 s){ float z = s.x*2. - 1.; float a = s.y*TAU; float r = sqrt(max(0., 1. - z*z)); return vec3(r*cos(a), z, r*sin(a)); }',
+      'vec3 rotY(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(c*v.x + s*v.z, v.y, -s*v.x + c*v.z); }',
+      'vec3 rotZ(vec3 v, float a){ float c = cos(a), s = sin(a); return vec3(c*v.x - s*v.y, s*v.x + c*v.y, v.z); }',
+      'float compressF(float p){',
+      '  float cp = smoothstep(0.36, 0.47, p);',
+      '  float c = mix(1., 0.035, cp*cp);',
+      '  return c * mix(1., 0.25, smoothstep(0.47, I_P, p));',
+      '}',
+      // spiral from a start point into a tilted accretion disk
+      'vec3 diskPath(vec3 s, float p, vec4 sd, out float g, out float r){',
+      '  float gs = 0.02 + sd.x*0.15;',
+      '  g = smoothstep(gs, 0.37, p);',
+      '  float gg = g*g*(3. - 2.*g);',
+      '  float rs = length(s.xz); float ths = atan(s.z, s.x);',
+      '  float rd = uR*mix(0.36, 1.0, pow(sd.y, 0.75));',
+      '  r = mix(rs, rd, gg) * compressF(p);',
+      '  float rn = max(r/uR, 0.2);',
+      '  float th = ths + 5.5*max(p - gs, 0.)*pow(rn, -1.5)*(0.25 + 0.75*gg);',
+      '  float y = mix(s.y, (sd.z - .5)*0.06*r, pow(gg, 1.3));',
+      '  vec3 q = vec3(r*cos(th), y, r*sin(th));',
+      '  return rotZ(q, -0.13*gg);',
+      '}',
+      'vec4 viewPos(float p, out float a, out float heat, out vec3 col, out float sz){',
+      '  vec4 sd = aSeed;',
+      '  float role = mod(floor(aRole + .5), 10.);',
+      '  float c = compressF(p);',
+      '  float dimG = 1. - 0.5*smoothstep(0.40, 0.53, p);',
+      '  float fin = smoothstep(0., 0.07, p);',
+      '  vec3 pos = vec3(0.); float g = 0., r = 0.;',
+      '  a = 1.; heat = 0.; sz = 1.;',
+      '  col = mix(mix(BLUE, VIOLET, sd.w), SOFT, sd.z*0.55);',
+      '  vec4 C = modelViewMatrix*vec4(0., 0., 0., 1.);',
+      '  float RE = uR*0.27*pow(c, 0.85);',
+      '  if (role < 1.5) {',
+      '    if (p < I_P) {',
+      '      vec3 s = position + (sd.xyz - .5)*0.12*uU*p;',
+      '      pos = diskPath(s, p, sd, g, r);',
+      '      heat = g*smoothstep(0.75*uR, 0.2*uR, r)*0.9 + (1. - c)*0.6;',
+      '      a = fin*mix(0.004, 1., c)*dimG*0.8;',
+      '    } else {',
+      '      float e = clamp((p - I_P)/(0.9 - I_P), 0., 1.);',
+      '      vec3 dir = normalize(sdir(sd.xy)*0.9 + vec3(aTarget.xy/uU, 0.)*0.9 + vec3(0., 0., 0.25));',
+      '      float rb = uR*(0.45 + 1.0*sd.z)*(1. - exp(-e*9.));',
+      '      float k = e3(smoothstep(0.08 + 0.22*sd.w, 0.6 + 0.3*sd.x, e));',
+      '      vec3 bp = rotY(dir*rb, (1. - k)*1.4);',
+      '      pos = mix(bp, aTarget, k);',
+      '      pos.xy += vec2(sin(uTime*0.9 + sd.x*40.), cos(uTime*0.7 + sd.y*40.))*0.0025*uU*k;',
+      '      heat = pow(1. - e, 3.)*0.9 + 0.22*k;',
+      '      col = mix(col, SOFT, 0.6*k);',
+      '      a = mix(1.1, 0.85, k)*mix(1., 0.3, smoothstep(0.86, 1., p));',
+      '      if (role > 0.5) {',
+      '        float tw = smoothstep(0.78, 1., p);',
+      '        float ph = fract(sd.w*7.13 + uTime*0.035);',
+      '        vec3 off = vec3((sd.x - .5)*0.8*uU*ph + sin(ph*5. + sd.y*TAU)*0.06*uR, ph*uR*1.15, -ph*ph*uR*1.8);',
+      '        pos += off*tw;',
+      '        a = mix(a, smoothstep(0., 0.18, ph)*(1. - ph)*1.1, tw);',
+      '        col = mix(col, mix(SOFT, VIOLET, ph), tw);',
+      '        heat *= 1. - tw*0.7;',
+      '      }',
+      '    }',
+      '  } else if (role < 2.5) {',
+      // ambient dust at many depths, pulled a little, then shoved by the shock shell
+      '    vec3 s0 = position;',
+      '    vec3 s = s0 + vec3(sin(uTime*.07 + sd.x*TAU), cos(uTime*.05 + sd.y*TAU), sin(uTime*.06 + sd.z*TAU))*0.06*uU;',
+      '    float d0 = length(s0);',
+      '    float ee = clamp((p - I_P)/0.3, 0., 1.);',
+      '    float Rs = uD*1.9*eo(ee);',
+      '    float passed = smoothstep(d0 - 0.3*uR, d0 + 0.3*uR, Rs)*step(I_P, p);',
+      '    float pull = 0.3*smoothstep(0.04, 0.5, p)/(1. + d0/(2.*uR))*(1. - passed);',
+      '    s = rotY(s, pull*2.)*(1. - pull*0.6);',
+      '    s += normalize(s0 + 1e-4)*passed*uR*(0.25 + 0.6*sd.z)*(1. + d0/uD);',
+      '    pos = s;',
+      '    float wave = exp(-abs(Rs - d0)/(0.25*uR + 0.06*d0))*step(I_P, p)*(1. - ee);',
+      '    a = (0.16 + 0.38*sd.w)*fin*dimG + wave*1.1;',
+      '    a *= mix(1., 0.65, smoothstep(0.85, 1., p));',
+      '    heat = wave*0.7;',
+      '    sz = 0.7 + 2.2*sd.x*sd.x*sd.x;',
+      '  } else {',
+      '    if (p < I_P) {',
+      '      pos = diskPath(position, p, sd, g, r);',
+      '      heat = g*smoothstep(0.75*uR, 0.2*uR, r)*0.9 + (1. - c)*0.6;',
+      '      a = fin*mix(0.004, 1., c)*dimG*0.6;',
+      '      if (role > 6.5) {',
+      // photon ring: thin bright circle around the shadow, drawn in view space
+      '        float ang = sd.x*TAU + p*9.;',
+      '        vec3 rv = vec3(cos(ang), sin(ang), 0.)*RE*(1.03 + (sd.z - .5)*0.05);',
+      '        a = smoothstep(0.22, 0.34, p)*(0.35 + 0.5*(1. - c))*mix(1., 0.5, smoothstep(0.47, I_P, p));',
+      '        heat = 0.75; col = SOFT; sz = 0.8;',
+      '        return vec4(C.xyz + rv, 1.);',
+      '      }',
+      '    } else if (role < 3.5 || role > 6.5) {',
+      // spherical shockwave shells at three speeds -> several depth layers, the fast one passes the camera
+      '      float ee = clamp((p - I_P)/0.3, 0., 1.);',
+      '      float m = sd.w < .45 ? 1. : (sd.w < .8 ? .6 : .34);',
+      '      if (role > 6.5) m = 1.12;',
+      '      float Rs = uD*1.9*eo(ee)*m + uR*0.03;',
+      '      pos = sdir(sd.xy)*Rs*(1. + (sd.z - .5)*0.05);',
+      '      a = pow(1. - ee, 1.4)*0.72;',
+      '      heat = pow(1. - ee, 2.)*0.8;',
+      '      col = mix(SOFT, VIOLET, sd.z);',
+      '    } else {',
+      '      float ec = clamp((p - I_P)/(0.95 - I_P), 0., 1.);',
+      '      float Hc = uH*eo(ec);',
+      '      float fadeL = smoothstep(I_P, I_P + 0.03, p)*mix(1., 0.24, smoothstep(0.72, 1., p));',
+      '      if (role < 4.5) {',
+      // rising column
+      '        float h = sd.x;',
+      '        float ang = sd.y*TAU + ec*2.5 + h*4. + uTime*0.15;',
+      '        float rc = uR*(0.04 + 0.07*h*h + 0.03*sd.z)*(0.5 + 0.7*eo(ec));',
+      '        pos = vec3(rc*cos(ang), Hc*pow(h, 0.85), rc*sin(ang) + uZb);',
+      '        a = fadeL*0.6*smoothstep(0., 0.12, h);',
+      '        heat = (1. - ec)*0.6*(1. - h);',
+      '        col = mix(VIOLET, SOFT, h*0.7);',
+      '      } else if (role < 5.5) {',
+      // toroidal cap, rolling around its minor circle
+      '        float Rt = uR*(0.1 + 0.42*eo(ec));',
+      '        float rt = Rt*0.34;',
+      '        float p1 = sd.x*TAU + ec*0.5 + uTime*0.05;',
+      '        float p2 = sd.y*TAU - ec*6. - uTime*0.3;',
+      '        float rr = Rt + rt*cos(p2)*(0.8 + 0.4*sd.z);',
+      '        pos = vec3(rr*cos(p1), Hc + rt*sin(p2), rr*sin(p1) + uZb);',
+      '        a = fadeL*0.75;',
+      '        heat = (1. - ec)*0.5;',
+      '        col = mix(SOFT, VIOLET, 0.5 + 0.5*sin(p2));',
+      '      } else {',
+      // ground shock ring
+      '        float eg = clamp((p - I_P)/0.33, 0., 1.);',
+      '        float Rg = uR*(0.15 + 4.0*eo(eg))*(1. + (sd.z - .5)*0.03);',
+      '        pos = vec3(Rg*cos(sd.x*TAU), -0.03*uR*sd.y, Rg*sin(sd.x*TAU));',
+      '        a = pow(1. - eg, 1.8)*0.8;',
+      '        heat = (1. - eg)*0.6;',
+      '        col = SOFT;',
+      '      }',
+      '    }',
+      '  }',
+      '  if (aRole > 9.5) { col = RED; heat *= 0.3; a *= 1.25; }',
+      '  col = mix(col, vec3(1.), clamp(heat, 0., 1.));',
+      '  vec4 mv = modelViewMatrix*vec4(pos, 1.);',
+      // gravitational lensing of everything behind the hole (pre-impact)
+      '  float Ls = smoothstep(0.08, 0.3, p)*step(p, I_P);',
+      '  if (Ls > 0.) {',
+      '    float behind = smoothstep(0., 0.35*uR, C.z - mv.z);',
+      '    float k = mv.z/C.z;',
+      '    vec2 cxy = C.xy*k;',
+      '    vec2 d = mv.xy - cxy;',
+      '    float dl = length(d);',
+      '    float REp = RE*k;',
+      '    float nd = 0.5*(dl + sqrt(dl*dl + 4.*REp*REp));',
+      '    mv.xy = cxy + d/max(dl, 1e-5)*mix(dl, nd, behind*Ls);',
+      '  }',
+      '  return mv;',
+      '}',
+      'void main(){',
+      '  float a, heat, sz, a2, h2, s2; vec3 col, c2;',
+      '  vec4 mv = viewPos(uP, a, heat, col, sz);',
+      '  vec4 mvb = viewPos(uP - 0.006, a2, h2, c2, s2);',
+      '  vec4 cp = projectionMatrix*mv;',
+      '  vec4 cpb = projectionMatrix*mvb;',
+      '  float dist = -mv.z;',
+      '  vec2 vel = vec2(0.);',
+      '  if (cp.w > 0.05 && cpb.w > 0.05) vel = (cp.xy/cp.w - cpb.xy/cpb.w)*0.5*uView;',
+      '  float len = min(length(vel)*1.8, 46.*uDpr);',
+      '  float core = uSize*sz*uProj/max(dist, 0.01);',
+      '  float lowA = clamp(core/(1.1*uDpr), 0.25, 1.);',
+      '  core = clamp(core, 1.1*uDpr, 14.*uDpr);',
+      '  float ps = min(core + len, uMaxPt);',
+      '  len = max(ps - core, 0.);',
+      '  vec2 dir = len > 0.5 ? normalize(vel) : vec2(1., 0.);',
+      '  cp.xy -= dir*len*0.5/(0.5*uView)*cp.w;',
+      '  gl_Position = cp;',
+      '  gl_PointSize = ps;',
+      '  vDir = dir; vHalf = 0.5*len/ps; vRad = 0.5*core/ps;',
+      '  float nearF = smoothstep(0.04*uD, 0.35*uD, dist);',
+      '  float farF = clamp(1.5 - dist/(2.4*uD), 0.25, 1.);',
+      '  vA = a*lowA*nearF*farF*core/(core + len*0.55);',
+      '  vCol = col;',
+      '}'
+    ].join('\n');
 
-    /* ---------- solid wordmark (B's extrusion, contrasted two-material relief) ---------- */
-    var word = new THREE.Group(); scene.add(word);
-    var sweepU = { value: -9 };
-    function faceOBC(sh) {
-      sh.uniforms.uHome = this.userData.uHome; sh.uniforms.uSweep = sweepU;
-      sh.vertexShader = 'varying vec3 vLoc;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvLoc = position;');
-      sh.fragmentShader = 'uniform vec2 uHome; uniform float uSweep; varying vec3 vLoc;\n' + sh.fragmentShader
-        .replace('#include <color_fragment>', '#include <color_fragment>\nvec2 wp = vLoc.xy + uHome;\ndiffuseColor.rgb *= mix(0.8, 1.04, clamp(wp.y*1.05 + 0.5, 0., 1.))*(1.02 - 0.05*clamp(wp.x*0.2 + 0.5, 0., 1.));')
-        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat swp = exp(-pow((wp.x + 0.45*wp.y - uSweep)/0.3, 2.));\ntotalEmissiveRadiance += vec3(0.16, 0.18, 0.23)*swp;');
-    }
-    function sideOBC(sh) {
-      sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat frs = pow(1. - clamp(abs(dot(normal, normalize(vViewPosition))), 0., 1.), 3.);\ntotalEmissiveRadiance += vec3(0.12, 0.18, 0.5)*frs*0.3;');
-    }
-    var G = (function buildGlyphs() {
-      var mc = document.createElement('canvas').getContext('2d'); mc.font = FONT;
-      var rr = rng(4242), L = [], minY = 1e9, maxY = -1e9, pens = [], i;
-      var perm = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-      for (i = 8; i > 0; i--) { var j = (rr() * (i + 1)) | 0, t = perm[i]; perm[i] = perm[j]; perm[j] = t; }
-      for (i = 0; i < WORD.length; i++) {
-        var pen = mc.measureText(WORD.slice(0, i)).width / GS + i * LSP; pens.push(pen);
-        var g = new THREE.ExtrudeGeometry(traceGlyph(THREE, WORD[i]), { depth: 0.085, bevelEnabled: true, bevelThickness: 0.016, bevelSize: 0.012, bevelOffset: -0.012, bevelSegments: 3, steps: 1, curveSegments: 1 });
-        g.computeBoundingBox();
-        var bb = g.boundingBox, cx = (bb.min.x + bb.max.x) / 2, cy = (bb.min.y + bb.max.y) / 2, cz = (bb.min.z + bb.max.z) / 2;
-        g.translate(-cx, -cy, -cz);
-        if (!g.index) smoothNormals(THREE, g);
-        minY = Math.min(minY, bb.min.y); maxY = Math.max(maxY, bb.max.y);
-        var fm = new THREE.MeshStandardMaterial({ color: 0xE6EAF1, roughness: 0.46, metalness: 0.04 });
-        fm.userData.uHome = { value: new THREE.Vector2() }; fm.onBeforeCompile = faceOBC;
-        var sm = new THREE.MeshStandardMaterial({ color: 0x2A2F3A, roughness: 0.3, metalness: 0.6 });
-        sm.onBeforeCompile = sideOBC;
-        var mesh = new THREE.Mesh(g, [fm, sm]); mesh.visible = false; word.add(mesh);
-        var s1 = rr() < .5 ? -1 : 1, ax = new THREE.Vector3(rr() - .5, rr() - .5, rr() - .5).normalize(), ax2 = new THREE.Vector3(rr() - .5, rr() - .5, rr() - .5).normalize();
-        var ti = 0.585 + perm.indexOf(i) * 0.021 + rr() * 0.012;
-        L.push({
-          mesh: mesh, fm: fm, sm: sm, hx: pen + cx, hy: cy, home: new THREE.Vector3(),
-          ti: ti, dur: Math.min(0.15 + rr() * 0.05, 0.9 - ti),
-          p1: new THREE.Vector3(s1 * (0.8 + rr() * 1.7), (rr() < .5 ? -1 : 1) * (0.5 + rr() * 1.1), 0.5 + rr() * 1.4),
-          p2: new THREE.Vector3((rr() - .5) * 1.6, (rr() - .5) * 1.3, 0.3 + rr() * 0.9),
-          ax: ax, ax2: ax2, turns: (rr() < .5 ? -1 : 1) * (0.55 + rr() * 1.1),
-          f: [9 + rr() * 9, 9 + rr() * 9, 7 + rr() * 6], ph: [rr() * 6.3, rr() * 6.3, rr() * 6.3], fx: rr() * 6.3
-        });
+    var FRAG = [
+      'precision mediump float;',
+      'varying vec3 vCol; varying float vA; varying vec2 vDir; varying float vHalf; varying float vRad;',
+      'void main(){',
+      '  vec2 q = gl_PointCoord - 0.5; q.y = -q.y;',
+      '  float t = clamp(dot(q, vDir), -vHalf, vHalf);',
+      '  float d = length(q - vDir*t)/max(vRad, 1e-4);',
+      '  float a = 1. - smoothstep(0.15, 1., d);',
+      '  a *= a;',
+      '  if (vHalf > 0.001) a *= mix(0.3, 1., (t/vHalf + 1.)*0.5);',
+      '  a *= vA;',
+      '  if (a < 0.004) discard;',
+      '  gl_FragColor = vec4(vCol, a);',
+      '}'
+    ].join('\n');
+
+    // ---------- layout: measure the DOM wordmark so particles land exactly on it ----------
+    function measure() {
+      var sr = el.getBoundingClientRect();
+      var cx = sr.left + sr.width / 2, cy = sr.top + sr.height / 2;
+      var fs = parseFloat(getComputedStyle(word).fontSize);
+      var spans = word.querySelectorAll('.l');
+      var base = word.querySelector('.bl').getBoundingClientRect().top;
+      var dotR = word.querySelector('.dot').getBoundingClientRect();
+      var letters = [];
+      for (var i = 0; i < spans.length; i++) {
+        var r = spans[i].getBoundingClientRect();
+        letters.push({ ch: spans[i].textContent, x: r.left, w: r.width });
       }
-      var total = mc.measureText(WORD).width / GS + WORD.length * LSP, dotCX = total + 0.05 + DOT_R;
-      var wordW = dotCX + DOT_R, wcx = wordW / 2, wcy = (minY + maxY) / 2;
-      L.forEach(function (l) { l.home.set(l.hx - wcx, l.hy - wcy, 0); l.fm.userData.uHome.value.set(l.home.x, l.home.y); });
-      var dot = new THREE.Mesh(new THREE.SphereGeometry(DOT_R, 32, 20), new THREE.MeshStandardMaterial({ color: 0xFF1F3D, roughness: 0.34, metalness: 0.1, emissive: 0xFF1F3D, emissiveIntensity: 0.28 }));
-      dot.userData.home = new THREE.Vector3(dotCX - wcx, DOT_R - wcy, 0); dot.scale.z = 0.8; dot.visible = false;
-      word.add(dot);
-      // coloured raster of the wordmark (em space) for A's particle letter clouds
-      var fsR = 900 / wordW, pad = 6, cw = Math.ceil(wordW * fsR) + pad * 2, chh = Math.ceil((maxY - minY) * fsR) + pad * 2, base = pad + maxY * fsR;
-      var c = document.createElement('canvas'); c.width = cw; c.height = chh;
-      var x = c.getContext('2d'); x.font = '700 ' + fsR + 'px "Google Sans",system-ui,sans-serif'; x.textBaseline = 'alphabetic';
-      for (i = 0; i < WORD.length; i++) { x.fillStyle = 'rgb(' + ((i + 1) * 24) + ',0,0)'; x.fillText(WORD[i], pad + pens[i] * fsR, base); }
-      x.fillStyle = 'rgb(240,0,0)'; x.beginPath(); x.arc(pad + dotCX * fsR, base - DOT_R * fsR, DOT_R * fsR, 0, Math.PI * 2); x.fill();
-      var data = x.getImageData(0, 0, cw, chh).data, px = [];
-      for (var yy = 0; yy < chh; yy++) for (var xx = 0; xx < cw; xx++) {
+      var wr = word.getBoundingClientRect();
+      return { cx: cx, cy: cy, fs: fs, base: base, letters: letters, dot: dotR, left: wr.left, top: wr.top, width: wr.width, height: wr.height };
+    }
+    // offscreen glyph raster: each letter drawn in its own colour so a pixel knows its letter
+    function rasterize(m) {
+      var sc = clamp(900 / m.width, 1, 3);
+      var pad = 8;
+      var cw = Math.ceil((m.width + pad * 2) * sc), ch = Math.ceil((m.height + pad * 2) * sc);
+      var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+      var x = c.getContext('2d');
+      x.font = '700 ' + (m.fs * sc) + 'px "Google Sans", system-ui, sans-serif';
+      x.textBaseline = 'alphabetic';
+      var ox = m.left - pad, oy = m.top - pad;
+      for (var i = 0; i < m.letters.length; i++) {
+        x.fillStyle = 'rgb(' + ((i + 1) * 24) + ',0,0)';
+        x.fillText(m.letters[i].ch, (m.letters[i].x - ox) * sc, (m.base - oy) * sc);
+      }
+      x.fillStyle = 'rgb(' + (10 * 24) + ',0,0)';
+      x.beginPath();
+      x.arc((m.dot.left + m.dot.width / 2 - ox) * sc, (m.dot.top + m.dot.height / 2 - oy) * sc, m.dot.width / 2 * sc, 0, Math.PI * 2);
+      x.fill();
+      var data = x.getImageData(0, 0, cw, ch).data;
+      var px = [];
+      for (var yy = 0; yy < ch; yy++) for (var xx = 0; xx < cw; xx++) {
         var k = (yy * cw + xx) * 4;
-        if (data[k + 3] > 140) px.push((xx + .5 - pad) / fsR - wcx, (base - yy - .5) / fsR - wcy, clamp(Math.round(data[k] / 24) - 1, 0, 9));
+        if (data[k + 3] > 140) px.push(xx, yy, clamp(Math.round(data[k] / 24) - 1, 0, 9));
       }
-      return { L: L, dot: dot, wordW: wordW, minY: minY - wcy, maxY: maxY - wcy, px: px, step: 1 / fsR };
-    })();
+      return { px: px, sc: sc, ox: ox, oy: oy };
+    }
 
     function rnd(a, b) { return a + Math.random() * (b - a); }
     function gauss() { return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5; }
 
-    function sizeCam() {
-      renderer.setSize(W, H, false);
-      var visH = H / 100;                              // 1 world unit = 100 css px on the z=0 plane
-      D = visH / (2 * TANH);
-      camera.aspect = W / H; camera.updateProjectionMatrix();
-      return visH;
-    }
     function build() {
       W = el.clientWidth; H = el.clientHeight;
-      if (!W || !H) return false;
       small = W < 820;
       dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2);
       renderer.setPixelRatio(dpr);
-      fs = clamp(0.165 * W, 48, 172);
-      fs = Math.min(fs, 0.9 * (W - 32) / G.wordW, H * 0.24);
-      var emW = fs / 100, visH = sizeCam();
-      word.scale.setScalar(emW);
-      U = G.wordW * emW / 2;
-      R = Math.min(0.92 * U, 0.3 * visH);
+      renderer.setSize(W, H, false);
+      fitWord(el, word);
+      var m = measure();
+      var visH = H / 100;                      // 1 world unit = 100 css px on the z=0 plane
+      D = visH / (2 * TANH);
+      U = m.width / 200;                       // half wordmark width in world units
+      R = Math.min(0.92 * U, 0.3 * visH);       // accretion disk radius
       colH = Math.min(1.7 * R, visH * 0.36);
-      builtW = W; builtH = H;
+      camera.aspect = W / H; camera.updateProjectionMatrix();
+      builtWidth = W;
 
+      var ras = rasterize(m);
+      var toWorld = function (x, y) { return [((x / ras.sc + ras.ox) - m.cx) / 100, -((y / ras.sc + ras.oy) - m.cy) / 100]; };
+
+      // letter centres + a scattered 3D pose for each letter cloud
       var poses = [];
       for (var i = 0; i < 10; i++) {
-        var lc = i < 9 ? [G.L[i].home.x * emW, G.L[i].home.y * emW] : [G.dot.userData.home.x * emW, 0];
+        var lx = i < 9 ? (m.letters[i].x + m.letters[i].w / 2) : (m.dot.left + m.dot.width / 2);
+        var lc = [(lx - m.cx) / 100, -((m.base - m.fs * 0.34) - m.cy) / 100];
         var spreadY = Math.min(visH * 0.3, U * 0.9);
-        poses.push({ c: lc, p: [lc[0] * rnd(1.25, 1.7) + rnd(-0.25, 0.25) * U, (i % 2 ? 1 : -1) * rnd(0.25, 1) * spreadY, rnd(-2.2, 0.7) * U],
-          ry: rnd(-0.9, 0.9), rz: rnd(-0.35, 0.35), s: rnd(0.85, 1.35) });
+        poses.push({
+          c: lc,
+          p: [lc[0] * rnd(1.25, 1.7) + rnd(-0.25, 0.25) * U, (i % 2 ? 1 : -1) * rnd(0.25, 1) * spreadY, rnd(-2.2, 0.7) * U],
+          ry: rnd(-0.9, 0.9), rz: rnd(-0.35, 0.35), s: rnd(0.85, 1.35)
+        });
       }
-      var NW = small ? 6000 : 14000, ND = small ? 1800 : 4500, NS = small ? 2200 : 5000,
+
+      var NW = small ? 6500 : 15000, ND = small ? 1800 : 4500, NS = small ? 2200 : 5000,
           NC = small ? 900 : 2000, NT = small ? 1100 : 2400, NG = small ? 600 : 1400, NR = small ? 500 : 1100;
       var N = NW + ND + NS + NC + NT + NG + NR;
       var pos = new Float32Array(N * 3), tgt = new Float32Array(N * 3), seed = new Float32Array(N * 4), role = new Float32Array(N);
-      var n = 0, pxc = G.px.length / 3, jit = G.step * emW;
+      var n = 0, pxc = ras.px.length / 3;
       function put(sx, sy, sz, tx, ty, tz, r) {
         pos[n * 3] = sx; pos[n * 3 + 1] = sy; pos[n * 3 + 2] = sz;
         tgt[n * 3] = tx; tgt[n * 3 + 1] = ty; tgt[n * 3 + 2] = tz;
         seed[n * 4] = Math.random(); seed[n * 4 + 1] = Math.random(); seed[n * 4 + 2] = Math.random(); seed[n * 4 + 3] = Math.random();
         role[n] = r; n++;
       }
+      // word particles (22% become the drifting trail)
       for (i = 0; i < NW && pxc > 0; i++) {
         var j = (Math.random() * pxc | 0) * 3;
-        var wx = G.px[j] * emW + (Math.random() - .5) * jit, wy = G.px[j + 1] * emW + (Math.random() - .5) * jit;
-        var li = G.px[j + 2], P = poses[li];
-        var lx0 = (wx - P.c[0]) * P.s, ly0 = (wy - P.c[1]) * P.s;
-        var cz = Math.cos(P.rz), sz = Math.sin(P.rz), lx1 = lx0 * cz - ly0 * sz, ly1 = lx0 * sz + ly0 * cz;
-        var cy = Math.cos(P.ry), sy = Math.sin(P.ry), fz = 0.012 * U;
+        var w = toWorld(ras.px[j] + Math.random(), ras.px[j + 1] + Math.random());
+        var li = ras.px[j + 2], P = poses[li];
+        var lx0 = (w[0] - P.c[0]) * P.s, ly0 = (w[1] - P.c[1]) * P.s;
+        var cz = Math.cos(P.rz), sz = Math.sin(P.rz);
+        var lx1 = lx0 * cz - ly0 * sz, ly1 = lx0 * sz + ly0 * cz;
+        var cy = Math.cos(P.ry), sy = Math.sin(P.ry);
+        var fz = 0.012 * U;
         put(P.p[0] + lx1 * cy + gauss() * fz, P.p[1] + ly1 + gauss() * fz, P.p[2] - lx1 * sy + gauss() * fz,
-            wx, wy, 0, (Math.random() < 0.18 ? 1 : 0) + (li === 9 ? 10 : 0));
+            w[0], w[1], 0, (Math.random() < 0.22 ? 1 : 0) + (li === 9 ? 10 : 0));
       }
+      // ambient dust across the depth of the stage
       var hw = W / 200, hh = H / 200;
       for (i = 0; i < ND; i++) put(rnd(-1.7, 1.7) * hw * 1.2, rnd(-1.4, 1.4) * hh, rnd(-0.9, 0.62) * D, 0, 0, 0, 2);
-      function matter(r) { var a = Math.random() * Math.PI * 2, rr = R * rnd(0.6, 2.6); put(Math.cos(a) * rr * 1.2, gauss() * U * 0.7, Math.sin(a) * rr - R * 0.3, 0, 0, 0, r); }
+      // disk material that later becomes shell / column / torus / ground ring / photon ring
+      function matter(r) {
+        var a = Math.random() * Math.PI * 2, rr = R * rnd(0.6, 2.6);
+        put(Math.cos(a) * rr * 1.2, gauss() * U * 0.7, Math.sin(a) * rr - R * 0.3, 0, 0, 0, r);
+      }
       for (i = 0; i < NS; i++) matter(3);
       for (i = 0; i < NC; i++) matter(4);
       for (i = 0; i < NT; i++) matter(5);
@@ -889,110 +804,66 @@ form{display:flex;flex-direction:column;gap:24px}
       geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6);
       if (!mat) {
         mat = new THREE.ShaderMaterial({
-          vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending,
-          uniforms: { uP: { value: 0 }, uTime: { value: 0 }, uR: { value: 1 }, uU: { value: 1 }, uD: { value: 10 }, uH: { value: 1 }, uZb: { value: 0 },
-            uProj: { value: 1 }, uDpr: { value: 1 }, uMaxPt: { value: maxPt }, uSize: { value: 0.02 }, uView: { value: new THREE.Vector2(1, 1) } }
+          vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, depthTest: false,
+          blending: THREE.AdditiveBlending,
+          uniforms: {
+            uP: { value: 0 }, uTime: { value: 0 }, uR: { value: 1 }, uU: { value: 1 }, uD: { value: 10 }, uH: { value: 1 }, uZb: { value: 0 },
+            uProj: { value: 1 }, uDpr: { value: 1 }, uMaxPt: { value: maxPt }, uSize: { value: 0.02 }, uView: { value: new THREE.Vector2(1, 1) }
+          }
         });
       }
       points = new THREE.Points(geo, mat);
-      points.frustumCulled = false; points.renderOrder = 1;
+      points.frustumCulled = false;
+      points.renderOrder = 1;
       scene.add(points);
-      uniformsForSize();
-      return true;
+      resizeUniforms();
+      needs = true;
     }
-    function uniformsForSize() {
+
+    function resizeUniforms() {
       var u = mat.uniforms;
+      var bw = Math.round(W * dpr), bh = Math.round(H * dpr);
       u.uR.value = R; u.uU.value = U; u.uD.value = D; u.uH.value = colH; u.uZb.value = -0.4 * R;
-      u.uProj.value = Math.round(H * dpr) / (2 * TANH); u.uDpr.value = dpr; u.uView.value.set(Math.round(W * dpr), Math.round(H * dpr));
+      u.uProj.value = bh / (2 * TANH); u.uDpr.value = dpr; u.uView.value.set(bw, bh);
       u.uSize.value = small ? 0.017 : 0.021;
     }
 
-    /* camera: above the disk plane, slow dolly, then settles level for the wordmark (A) */
+    // ---------- camera: slightly above the disk plane, slow dolly, then settles level for the wordmark ----------
     function placeCamera(pp) {
       var pre = eio(ss(0, 0.5, pp));
-      var elv = lerp(0.2, 0.27, pre), dist = D * lerp(1.3, 0.97, pre), az = lerp(-0.34, 0.04, pre);
+      var el = lerp(0.2, 0.27, pre), dist = D * lerp(1.3, 0.97, pre), az = lerp(-0.34, 0.04, pre);
       var q = eio(ss(I_P, 0.92, pp));
       var kick = pp > I_P ? Math.exp(-(pp - I_P) * 28) * (1 - Math.exp(-(pp - I_P) * 260)) : 0;
-      elv = lerp(elv, 0, q); az = lerp(az, 0, q); dist = lerp(dist, D, q) + D * 0.05 * kick;
-      camera.position.set(dist * Math.cos(elv) * Math.sin(az), dist * Math.sin(elv), dist * Math.cos(elv) * Math.cos(az));
+      el = lerp(el, 0, q); az = lerp(az, 0, q); dist = lerp(dist, D, q) + D * 0.05 * kick;
+      camera.position.set(dist * Math.cos(el) * Math.sin(az), dist * Math.sin(el), dist * Math.cos(el) * Math.cos(az));
       camera.lookAt(0, 0, 0);
       camera.updateMatrixWorld();
     }
+
     function placeGlows(pp) {
+      // hold-beat pinpoint, then a short restrained flash at the impact
       var hold = ss(0.44, 0.5, pp) * (pp < I_P ? 1 : 0) * (0.75 + 0.25 * Math.sin(pp * 220));
       var fl = pp >= I_P ? Math.exp(-(pp - I_P) * 38) : 0;
       core.material.opacity = Math.min(1, hold * 0.55 + fl * 0.95);
-      var s = R * (0.12 * hold + fl * 3.4) + 0.001; core.scale.set(s, s, 1);
-      halo.material.opacity = pp >= I_P ? ss(I_P, 0.62, pp) * lerp(0.5, 0.26, ss(0.7, 1, pp)) : ss(0.15, 0.35, pp) * 0.18 * (1 - ss(0.4, 0.5, pp));
+      var s = R * (0.12 * hold + fl * 3.4) + 0.001;
+      core.scale.set(s, s, 1);
+      var hl = pp >= I_P ? ss(I_P, 0.62, pp) * lerp(0.55, 0.3, ss(0.7, 1, pp)) : ss(0.15, 0.35, pp) * 0.18 * (1 - ss(0.4, 0.5, pp));
+      halo.material.opacity = hl;
       var hs = pp >= I_P ? R * lerp(1.2, 3.6, eio(ss(I_P, 0.9, pp))) : R * 2.4;
       halo.scale.set(hs * 1.4, hs, 1);
-      halo.position.set(0, pp >= I_P ? colH * 0.35 * ss(I_P, 0.9, pp) : 0, -0.6 * R);
-      burstL.intensity = pp >= I_P ? 2.4 * Math.exp(-(pp - I_P) * 9) : 0;
-      burstL.position.set(0, 0, -0.3 * R);
+      halo.position.set(0, pp >= I_P ? colH * 0.35 * ss(I_P, 0.9, pp) : 0, -0.4 * R);
     }
 
-    /* letters: each one erupts from the core on its own tumbling, jittering path, then snaps home (pure fn of p) */
-    var V = new THREE.Vector3(), Q1 = new THREE.Quaternion(), Q2 = new THREE.Quaternion(), P0 = new THREE.Vector3(0, 0, -0.6);
-    function bez(a, b, c, d, t, out) {
-      var u = 1 - t, k0 = u * u * u, k1 = 3 * u * u * t, k2 = 3 * u * t * t, k3 = t * t * t;
-      return out.set(a.x * k0 + b.x * k1 + c.x * k2 + d.x * k3, a.y * k0 + b.y * k1 + c.y * k2 + d.y * k3, a.z * k0 + b.z * k1 + c.z * k2 + d.z * k3);
-    }
-    var endClock = -1;
-    function placeLetters(pp) {
-      var post = pp >= I_P, amb = reduced ? 0 : ss(0.9, 1, pp), tm = clock;
-      var settle = ss(0.84, 1, pp);
-      word.rotation.set(0.075 * settle + 0.012 * Math.sin(tm * 0.23) * amb, -0.11 * settle + 0.022 * Math.sin(tm * 0.17 + 1) * amb, 0.004 * settle);
-      for (var i = 0; i < G.L.length; i++) {
-        var L = G.L[i], m = L.mesh, t = clamp((pp - L.ti) / L.dur, 0, 1);
-        m.visible = post && t > 0;
-        if (!m.visible) continue;
-        var s = eBack(Math.pow(t, 0.8), 1.15), fall = Math.pow(1 - t, 2);
-        bez(P0, L.p1, L.p2, L.home, clamp(s, 0, 1.2), m.position);
-        m.position.x += Math.sin(t * L.f[0] + L.ph[0]) * 0.42 * fall;
-        m.position.y += Math.sin(t * L.f[1] + L.ph[1]) * 0.34 * fall;
-        m.position.z += Math.sin(t * L.f[2] + L.ph[2]) * 0.5 * fall;
-        Q1.setFromAxisAngle(L.ax, L.turns * 6.2832 * (1 - eBack(t, 1.7)));
-        Q2.setFromAxisAngle(L.ax2, 0.9 * Math.sin(t * L.f[2] + L.ph[0]) * fall);
-        m.quaternion.copy(Q1).multiply(Q2);
-        if (t >= 1 && amb > 0) {
-          m.position.z += Math.sin(tm * 0.6 + L.fx) * 0.012 * amb;
-          m.rotateX(Math.sin(tm * 0.41 + L.fx) * 0.014 * amb);
-          m.rotateY(Math.sin(tm * 0.33 + L.fx * 1.7) * 0.02 * amb);
-        }
-        m.scale.setScalar(lerp(0.08, 1, eo3(Math.min(1, t * 2.4))));
-        var heat = Math.exp(-(pp - L.ti) / 0.07);
-        L.fm.emissive.setRGB(0.5 * heat, 0.62 * heat, 1.05 * heat);
-        L.sm.emissive.setRGB(0.35 * heat, 0.45 * heat, 0.9 * heat);
-      }
-      var d = G.dot, dh = d.userData.home, dt = clamp((pp - 0.875) / 0.07, 0, 1);
-      d.visible = dt > 0;
-      if (d.visible) {
-        var dy = 1 - Math.min(1.06, eBack(dt, 2.2));
-        d.position.set(dh.x + 0.06 * (1 - dt), dh.y + dy * 1.5, dh.z + (1 - eo3(dt)) * 1.2);
-        var ds = eo3(Math.min(1, dt * 2)); d.scale.set(ds, ds, ds * 0.8);
-      }
-      // slow light sweep across the faces: once during the settle (p), then every ~9 s after the end (time)
-      var half = G.wordW / 2 + 1.2;
-      if (pp < 1 || reduced) { endClock = -1; sweepU.value = lerp(-half, half, eio(ss(0.88, 1, pp))); }
-      else {
-        if (endClock < 0) endClock = tm;
-        var cyc = ((tm - endClock) % 9) / 4;
-        sweepU.value = cyc < 1 ? lerp(-half, half, eio(cyc)) : half;
-      }
-    }
-
-    var p = 0, playing = false, t0 = 0, T = T_DEF, clock = 0, lastNow = 0, needs = true, frameSkip = 0, raf = 0, onScreen = true, active = pend.active, ready = false;
-    function report() {
-      if (!opts.onProgress) return;
-      var yc = H / 2;
-      opts.onProgress(p, { wordTop: yc - G.maxY * fs, wordBottom: yc - G.minY * fs, fs: fs });
-    }
+    var p = 0, playing = false, t0 = 0, T = T_DEF / 1000, clock = 0, lastNow = 0, needs = true, frameSkip = 0, raf = 0;
+    var onScreen = true, active = pend.active, ready = false;
     function render() {
-      mat.uniforms.uP.value = p; mat.uniforms.uTime.value = clock;
-      placeCamera(p); placeGlows(p); placeLetters(p);
+      mat.uniforms.uP.value = p;
+      mat.uniforms.uTime.value = clock;
+      placeCamera(p); placeGlows(p);
       renderer.render(scene, camera);
+      word.style.opacity = ss(0.86, 0.975, p).toFixed(3);
       needs = false;
-      report();
+      if (opts.onProgress) opts.onProgress(p, wordInfo(el, word));
     }
     function loop(now) {
       raf = 0;
@@ -1000,31 +871,36 @@ form{display:flex;flex-direction:column;gap:24px}
       var dt = lastNow ? Math.min(0.05, (now - lastNow) / 1000) : 0;
       lastNow = now;
       if (!reduced) clock += dt;
-      if (playing) { p = Math.min(1, (now - t0) / T); if (p >= 1) playing = false; needs = true; }
-      var ambient = !reduced && p > 0.78;             // settled: ambient trail + float at ~30 fps
+      if (playing) { p = Math.min(1, (now - t0) / (T * 1000)); if (p >= 1) playing = false; needs = true; }
+      var ambient = !reduced && p > 0.78;             // idle end state: ambient trail at ~30fps
       if (ambient && !playing) { frameSkip ^= 1; if (!frameSkip) needs = true; }
       if (needs) render();
       if (playing || ambient || needs) raf = requestAnimationFrame(loop);
     }
     function kick() { needs = true; if (ready && !raf && !document.hidden && onScreen && active) { lastNow = 0; raf = requestAnimationFrame(loop); } }
+    function resync() { if (playing) t0 = performance.now() - p * T * 1000; kick(); }
 
     S.setP = function (v) { playing = false; p = v; if (ready) { render(); kick(); } };
-    S.setActive = function (on) { if (on === active) return; active = on; if (on) { if (playing) t0 = performance.now() - p * T; kick(); } };
+    S.setActive = function (on) { if (on === active) return; active = on; if (on) resync(); };
     S.play = function (ms) {
       if (reduced) { S.setP(1); return; }
-      T = ms; p = 0; t0 = performance.now(); playing = true; kick();
+      T = ms / 1000; p = 0; t0 = performance.now(); playing = true; kick();
     };
 
-    document.addEventListener('visibilitychange', function () { if (!document.hidden) { if (playing) t0 = performance.now() - p * T; kick(); } });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) { if (playing) t0 = performance.now() - p * T; kick(); } }).observe(el);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) resync(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; if (onScreen) resync(); }).observe(el);
     var rt = 0;
     function onResize() {
       clearTimeout(rt);
       rt = setTimeout(function () {
-        var w = el.clientWidth, h = el.clientHeight;
-        if (!w || !h) return;
-        if (Math.abs(w - builtW) > 40 || Math.abs(h - builtH) > 120) build();
-        else { W = w; H = h; sizeCam(); uniformsForSize(); }
+        if (!el.clientWidth || !el.clientHeight) return;
+        if (Math.abs(el.clientWidth - builtWidth) > 40) build();
+        else {
+          W = el.clientWidth; H = el.clientHeight;
+          renderer.setSize(W, H, false);
+          D = (H / 100) / (2 * TANH); R = Math.min(0.92 * U, 0.3 * H / 100); colH = Math.min(1.7 * R, H / 100 * 0.36);
+          camera.aspect = W / H; camera.updateProjectionMatrix(); resizeUniforms();
+        }
         kick();
       }, 150);
     }
@@ -1094,7 +970,7 @@ setTimeout(startIntro, 8000);
 function renderHero() {
   if (A) {
     if (S.mobile) {
-      if (introReady && !played) { played = true; setTimeout(function () { A.play(7200); }, 300); }
+      if (introReady && !played) { played = true; setTimeout(function () { A.play(6800); }, 300); }
     } else if (S.ps !== sent) { sent = S.ps; A.setProgress(S.ps); }
     if (heroVisible !== live) { live = heroVisible; A.setActive(heroVisible); }
   }

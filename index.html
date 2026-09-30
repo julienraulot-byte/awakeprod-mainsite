@@ -7,7 +7,7 @@
 <meta name="description" content="AwakeProd designs, builds and ships its own web and mobile products: Invecter, Hextaze, Technipatch and Devancel. Independent software, made in France.">
 <link rel="canonical" href="https://awakeprod.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="AwakeProd — independent software studio">
+<meta property="og:title" content="Awakeprod - Independent Software Studio">
 <meta property="og:description" content="Instruments for live AV crews, a generative camera, a system diagram editor and a public tender monitor. One studio, from first sketch to store release.">
 <meta property="og:url" content="https://awakeprod.com/">
 <meta property="og:image" content="https://awakeprod.com/img/og.jpg">
@@ -505,7 +505,7 @@ form{display:flex;flex-direction:column;gap:24px}
       '  float rd = uR*mix(0.36, 1.0, pow(sd.y, 0.75));',
       '  r = mix(rs, rd, gg) * compressF(p);',
       '  float rn = max(r/uR, 0.2);',
-      '  float th = ths + 5.5*max(p - gs, 0.)*pow(rn, -1.5)*(0.25 + 0.75*gg);',
+      '  float th = ths + 7.2*max(p - gs, 0.)*pow(rn, -1.5)*(0.35 + 0.65*gg);',
       '  float y = mix(s.y, (sd.z - .5)*0.06*r, pow(gg, 1.3));',
       '  vec3 q = vec3(r*cos(th), y, r*sin(th));',
       '  return rotZ(q, -0.13*gg);',
@@ -557,7 +557,7 @@ form{display:flex;flex-direction:column;gap:24px}
       '    float Rs = uD*1.9*eo(ee);',
       '    float passed = smoothstep(d0 - 0.3*uR, d0 + 0.3*uR, Rs)*step(I_P, p);',
       '    float pull = 0.3*smoothstep(0.04, 0.5, p)/(1. + d0/(2.*uR))*(1. - passed);',
-      '    s = rotY(s, pull*2.)*(1. - pull*0.6);',
+      '    s = rotY(s, pull*2.8)*(1. - pull*0.6);',
       '    s += normalize(s0 + 1e-4)*passed*uR*(0.25 + 0.6*sd.z)*(1. + d0/uD);',
       '    pos = s;',
       '    float wave = exp(-abs(Rs - d0)/(0.25*uR + 0.06*d0))*step(I_P, p)*(1. - ee);',
@@ -748,16 +748,12 @@ form{display:flex;flex-direction:column;gap:24px}
       var ras = rasterize(m);
       var toWorld = function (x, y) { return [((x / ras.sc + ras.ox) - m.cx) / 100, -((y / ras.sc + ras.oy) - m.cy) / 100]; };
 
-      // letter centres + a scattered 3D pose for each letter cloud
-      var poses = [];
-      for (var i = 0; i < 10; i++) {
-        var lx = i < 9 ? (m.letters[i].x + m.letters[i].w / 2) : (m.dot.left + m.dot.width / 2);
-        var lc = [(lx - m.cx) / 100, -((m.base - m.fs * 0.34) - m.cy) / 100];
-        var spreadY = Math.min(visH * 0.3, U * 0.9);
-        poses.push({
-          c: lc,
-          p: [lc[0] * rnd(1.25, 1.7) + rnd(-0.25, 0.25) * U, (i % 2 ? 1 : -1) * rnd(0.25, 1) * spreadY, rnd(-2.2, 0.7) * U],
-          ry: rnd(-0.9, 0.9), rz: rnd(-0.35, 0.35), s: rnd(0.85, 1.35)
+      // shapeless dust patches scattered in depth: the word only exists once the particles land on it
+      var patches = [], spreadX = Math.max(U * 1.5, visH * 0.45), spreadY = Math.min(visH * 0.36, U * 1.1);
+      for (var i = 0; i < 14; i++) {
+        patches.push({
+          p: [rnd(-1, 1) * spreadX, rnd(-1, 1) * spreadY, rnd(-2.2, 0.6) * U],
+          r: [rnd(0.12, 0.42) * U, rnd(0.06, 0.24) * U, rnd(0.1, 0.35) * U], rz: rnd(-1.2, 1.2)
         });
       }
 
@@ -776,13 +772,9 @@ form{display:flex;flex-direction:column;gap:24px}
       for (i = 0; i < NW && pxc > 0; i++) {
         var j = (Math.random() * pxc | 0) * 3;
         var w = toWorld(ras.px[j] + Math.random(), ras.px[j + 1] + Math.random());
-        var li = ras.px[j + 2], P = poses[li];
-        var lx0 = (w[0] - P.c[0]) * P.s, ly0 = (w[1] - P.c[1]) * P.s;
-        var cz = Math.cos(P.rz), sz = Math.sin(P.rz);
-        var lx1 = lx0 * cz - ly0 * sz, ly1 = lx0 * sz + ly0 * cz;
-        var cy = Math.cos(P.ry), sy = Math.sin(P.ry);
-        var fz = 0.012 * U;
-        put(P.p[0] + lx1 * cy + gauss() * fz, P.p[1] + ly1 + gauss() * fz, P.p[2] - lx1 * sy + gauss() * fz,
+        var li = ras.px[j + 2], P = patches[Math.random() * patches.length | 0];
+        var gx = gauss() * P.r[0], gy = gauss() * P.r[1], cz = Math.cos(P.rz), sz = Math.sin(P.rz);
+        put(P.p[0] + gx * cz - gy * sz, P.p[1] + gx * sz + gy * cz, P.p[2] + gauss() * P.r[2],
             w[0], w[1], 0, (Math.random() < 0.22 ? 1 : 0) + (li === 9 ? 10 : 0));
       }
       // ambient dust across the depth of the stage

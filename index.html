@@ -51,7 +51,7 @@ a{color:#A9C4FF}a:hover{color:#FFFFFF}
 .nav{display:flex;gap:clamp(4px,2vw,24px)}
 .nav a{display:flex;align-items:center;min-height:44px;padding:0 8px;font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
 
-.hero{position:relative;height:calc(var(--vh) * 4)}
+.hero{position:relative;height:calc(var(--vh) * 2)}
 .stage{position:sticky;top:0;height:var(--vh);overflow:hidden;display:grid;place-items:center;background:#0E1013}
 .intro{position:absolute;inset:0;z-index:1}
 .intro::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(14,16,19,0) 55%,rgba(14,16,19,.6) 100%)}
@@ -63,12 +63,16 @@ a{color:#A9C4FF}a:hover{color:#FFFFFF}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .nojs-word{display:none;position:relative;z-index:2;font-weight:700;font-size:clamp(48px,15vw,172px);line-height:1;letter-spacing:-.03em;color:#FFFFFF;white-space:nowrap}
 .nojs-word i{display:inline-block;width:.19em;height:.19em;border-radius:50%;background:#FF1F3D;margin-left:.05em}
-.hint{position:absolute;bottom:32px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:8px;z-index:3;transition:opacity .3s}
-.post{position:absolute;left:0;right:0;top:64%;display:flex;justify-content:center;text-align:center;padding:0 16px;opacity:0;transform:translateY(10px);transition:opacity .8s .6s,transform .8s .6s;z-index:3}
+.hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3;color:#FFFFFF;transition:opacity .5s}
+.hint.off{opacity:0;pointer-events:none}
+.hint-line{position:relative;width:1px;height:48px;overflow:hidden;background:rgba(255,255,255,.18)}
+.hint-line::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:#FFFFFF;animation:hint 1.8s cubic-bezier(.6,0,.4,1) infinite}
+@keyframes hint{to{top:100%}}
+.post{position:absolute;left:0;right:0;top:64%;pointer-events:none;display:flex;justify-content:center;text-align:center;padding:0 16px;opacity:0;transform:translateY(10px);transition:opacity .8s .6s,transform .8s .6s;z-index:3}
 .post.on{opacity:1;transform:none}
 .post p{margin:0;font-size:clamp(18px,1.6vw,22px);line-height:1.5;color:#B8BCC4;max-width:34ch;text-wrap:pretty}
 
-.apps{position:relative;z-index:5;height:calc(var(--vh) * 5);margin-top:calc(var(--vh) * -1);background:#1F2226;color:#FFFFFF;box-shadow:0 -30px 80px rgba(0,0,0,.25)}
+.apps{position:relative;z-index:5;height:calc(var(--vh) * 6);margin-top:calc(var(--vh) * -1);background:#1F2226;color:#FFFFFF;box-shadow:0 -30px 80px rgba(0,0,0,.25)}
 .apps-stage{position:sticky;top:0;height:var(--vh);overflow:hidden;display:flex;flex-direction:column;background:#1F2226}
 .apps-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:104px clamp(16px,4vw,48px) 0;position:relative;z-index:2}
 .apps-head h2{margin:0;font-size:clamp(28px,3vw,40px);letter-spacing:-.01em;font-weight:700}
@@ -90,14 +94,14 @@ a{color:#A9C4FF}a:hover{color:#FFFFFF}
 .p-shot{position:absolute;z-index:1;top:0;bottom:24px;right:clamp(16px,3.4vw,64px);width:min(40vw,680px);display:flex;justify-content:center;align-items:center;min-width:0;perspective:1200px}
 .p-shot::before{content:"";position:absolute;left:50%;top:50%;width:120%;aspect-ratio:1;max-height:130%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,var(--acc) 0%,transparent 100%);opacity:.34;filter:blur(40px);pointer-events:none}
 .panel[data-i="0"]{--acc:#12D6B8}.panel[data-i="1"]{--acc:#8A5BFF}.panel[data-i="2"]{--acc:#F2A33A}.panel[data-i="3"]{--acc:#3DBA5B}
-.shot{--r:24px;position:relative;display:block;overflow:hidden;background:#0B0C0E;will-change:transform,clip-path;clip-path:inset(12% 10% 12% 10% round var(--r));transition:clip-path 1.1s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.shot{--r:24px;position:relative;display:block;overflow:hidden;background:#0B0C0E;will-change:transform,clip-path;clip-path:inset(12% 10% 12% 10% round var(--r));transition:clip-path 1.1s cubic-bezier(.2,.8,.2,1)}
 .shot.on{clip-path:inset(0 0 0 0 round var(--r))}
 .shot.phone{--r:44px;box-sizing:border-box;border:9px solid #0B0C0E;height:min(calc(var(--vh) * .64),92%);width:auto;max-width:100%;aspect-ratio:9/19.5}
-.shot.phone img{border-radius:35px}
-.shot.web{width:100%;height:auto;aspect-ratio:16/10.4}
-.shot.web::before{content:"";position:absolute;left:0;right:0;top:0;height:30px;background:radial-gradient(circle at 18px 15px,#4A4E56 4px,transparent 4.5px),radial-gradient(circle at 34px 15px,#4A4E56 4px,transparent 4.5px),radial-gradient(circle at 50px 15px,#4A4E56 4px,transparent 4.5px),#1A1C20;z-index:1}
+.shot.phone img,.shot.phone::after{border-radius:35px}
+.shot.web{--r:0px;width:100%;height:auto}
+@media (min-width:821px){.p-shot:has(.web){width:min(44vw,780px)}}
 .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.shot.web img{top:30px;height:calc(100% - 30px)}
+.shot.web img{position:relative;height:auto}
 .shot::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.1),rgba(255,255,255,0) 45%);pointer-events:none}
 .chanbar{display:flex;gap:8px;padding:0 clamp(16px,4vw,48px) 24px;position:relative;z-index:2}
 .chan{flex:1;min-height:56px;background:transparent;border:0;border-top:2px solid rgba(255,255,255,.14);color:#A0A5AD;text-align:left;padding:14px 0 0;font:inherit;font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;transition:color .2s,border-color .2s}
@@ -119,8 +123,8 @@ a{color:#A9C4FF}a:hover{color:#FFFFFF}
 .p-shot::before{width:110%;opacity:.3}
 .shot{transform:none !important;clip-path:inset(0 0 0 0 round var(--r))}
 .shot.phone{--r:36px;border-width:7px;height:auto;width:min(62%,calc(var(--vh) * .3))}
-.shot.phone img{border-radius:29px}
-.shot.web{--r:14px;width:100%}
+.shot.phone img,.shot.phone::after{border-radius:29px}
+.shot.web{width:100%}
 .chanbar{display:none}
 }
 
@@ -207,7 +211,7 @@ form{display:flex;flex-direction:column;gap:24px}
 <h1 class="sr">awakeprod</h1>
 <div class="nojs-word" aria-hidden="true">awakeprod<i></i></div>
 <div id="ap-post" class="post"><p>An independent studio building web and mobile instruments.</p></div>
-<div id="ap-hint" class="hint lab" aria-hidden="true">Scroll<svg width="16" height="16" viewBox="0 0 24 24"><path class="ico" d="M12 5v14M6 13l6 6 6-6"></path></svg></div>
+<div id="ap-hint" class="hint lab" aria-hidden="true">Scroll<span class="hint-line"></span></div>
 </div>
 </section>
 
@@ -930,23 +934,21 @@ var panels = Array.prototype.slice.call(track.querySelectorAll('.panel'));
 var chans = Array.prototype.slice.call(document.querySelectorAll('.chan'));
 
 var S = { ps: 0, qs: 0, vs: 0, ip: 0, W: 1440, H: 900, mobile: false, active: -1, dark: false, mx: 0, my: 0 };
-var pt = 0, qt = 0, lastY = 0, mxT = 0, myT = 0, heroVisible = true, past = false, dirty = true;
+var qt = 0, lastY = 0, mxT = 0, myT = 0, heroVisible = true, past = false, dirty = true;
 var C = { x: -100, y: -100, tx: -100, ty: -100 };
-var P_END = 0.65; // desktop: the intro completes at 65% of the hero scroll range, before Products slides over it
-var A = null, introReady = false, played = false, sent = -1, live = null;
+var Q_END = 0.84; // carousel: the last product is in place at 84% of the section, the rest is a hold before the page moves on
+var A = null, live = null, triggered = false, skip = false, locked = false, lockAt = 0;
 
 function measure() {
   var H = Math.min(window.innerHeight || 900, 1000);
   var W = document.documentElement.clientWidth || window.innerWidth || 1440;
   var mobile = W <= 820, dk = false;
   var r = hero.getBoundingClientRect(), r2 = apps.getBoundingClientRect();
-  if (!mobile) pt = reduced ? 1 : clamp(-r.top / Math.max(r.height - H, 1) / P_END, 0, 1);
   heroVisible = r.bottom > 0 && r2.top > 0;
   past = r2.top < H * 0.3;
-  qt = mobile ? 0 : clamp(-r2.top / Math.max(r2.height - H, 1), 0, 1);
+  qt = mobile ? 0 : clamp(-r2.top / Math.max(r2.height - H, 1) / Q_END, 0, 1);
   if (r2.top < 64 && r2.bottom > 64) dk = true;
   var r3 = deep.getBoundingClientRect(); if (r3.top < 64 && r3.bottom > 64) dk = true;
-  if (mobile !== S.mobile) sent = -1;
   S.W = W; S.H = H; S.mobile = mobile;
   if (dk !== S.dark) { S.dark = dk; bar.className = 'topbar' + (dk ? ' dark' : ''); }
 }
@@ -957,8 +959,9 @@ function startIntro() {
   A = window.AwakeIntro;
   A.mount(intro, {
     onProgress: function (p, info) { S.ip = p; post.style.top = (info.wordBottom + Math.max(16, info.fs * 0.2)).toFixed(1) + 'px'; },
-    onReady: function () { introReady = true; }
   });
+  if (reduced || skip || (!triggered && (window.scrollY || 0) > 8)) { triggered = true; A.setProgress(1); hint.className = 'hint lab off'; }
+  else if (triggered) A.play(6800);
 }
 var three = document.createElement('script');
 three.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
@@ -967,22 +970,50 @@ three.onload = three.onerror = startIntro;
 document.head.appendChild(three);
 setTimeout(startIntro, 8000);
 
-function renderHero() {
-  if (A) {
-    if (S.mobile) {
-      if (introReady && !played) { played = true; setTimeout(function () { A.play(6800); }, 300); }
-    } else if (S.ps !== sent) { sent = S.ps; A.setProgress(S.ps); }
-    if (heroVisible !== live) { live = heroVisible; A.setActive(heroVisible); }
+// the intro plays on its own: the first scroll gesture starts it and holds the page until it has finished
+function trigger() {
+  if (triggered) return;
+  triggered = true; locked = !reduced; lockAt = Date.now();
+  hint.className = 'hint lab off';
+  if (A) { if (reduced) A.setProgress(1); else A.play(6800); }
+}
+function unlock() { locked = false; }
+function hold(e) {
+  if (!triggered && (window.scrollY || 0) <= 8) { e.preventDefault(); trigger(); return; }
+  if (locked) {
+    if (S.ip >= 1 || Date.now() - lockAt > 9000) unlock();
+    else e.preventDefault();
   }
-  var ip = S.ip, on = S.mobile ? ip >= 1 : past;
+}
+window.addEventListener('wheel', hold, { passive: false });
+window.addEventListener('touchmove', hold, { passive: false });
+window.addEventListener('keydown', function (e) {
+  if ([' ', 'PageDown', 'ArrowDown', 'Down', 'End'].indexOf(e.key) >= 0 && !(e.target && e.target.closest && e.target.closest('input,textarea,select'))) hold(e);
+});
+document.addEventListener('click', function (e) {
+  if (!e.target || !e.target.closest || !e.target.closest('a[href^="#"]')) return;
+  unlock();
+  if (!triggered) { triggered = true; skip = true; hint.className = 'hint lab off'; if (A) A.setProgress(1); }
+});
+
+function renderHero() {
+  if (A && heroVisible !== live) { live = heroVisible; A.setActive(heroVisible); }
+  if (locked && S.ip >= 1) unlock();
+  var ip = S.ip, on = ip >= 1 || past;
   if (mark.classList.contains('on') !== on) mark.className = 'mark' + (on ? ' on' : '');
   var pc = 'post' + (ip >= 0.93 ? ' on' : '');
   if (post.className !== pc) post.className = pc;
-  hint.style.opacity = Math.max(0, 1 - ip * 8).toFixed(2);
+}
+
+// carousel position: each product rests for a moment before the next one slides in
+function settle(x) {
+  var i = Math.floor(x), f = x - i;
+  f = clamp((f - 0.15) / 0.7, 0, 1);
+  return i + f * f * (3 - 2 * f);
 }
 
 function renderApps() {
-  var W = S.W, nA = panels.length, pos = S.qs * (nA - 1), active = Math.round(pos), k = reduced ? 0 : K;
+  var W = S.W, nA = panels.length, pos = settle(S.qs * (nA - 1)), active = Math.round(pos), k = reduced ? 0 : K;
   var skew = clamp(-S.vs * 0.12, -7, 7);
   if (!S.mobile) { track.style.width = (W * nA) + 'px'; track.style.transform = 'translate3d(' + (-pos * W).toFixed(1) + 'px,0,0)'; }
   for (var i = 0; i < nA; i++) {
@@ -1009,13 +1040,11 @@ function renderApps() {
 function frame() {
   if (dirty) { dirty = false; measure(); }
   var kk = reduced ? 1 : 0.11;
-  var ps = S.ps + (pt - S.ps) * kk, qs = S.qs + (qt - S.qs) * kk;
-  if (pt >= 0.999 && ps > 0.99) ps = 1;
-  if (Math.abs(pt - ps) < 0.0005) ps = pt;
+  var qs = S.qs + (qt - S.qs) * kk;
   var y = window.scrollY || 0, v = y - lastY; lastY = y;
   S.vs = S.vs + (clamp(v, -60, 60) - S.vs) * 0.15; if (Math.abs(S.vs) < 0.05) S.vs = 0;
   S.mx += (mxT - S.mx) * 0.08; S.my += (myT - S.my) * 0.08;
-  S.ps = ps; S.qs = qs;
+  S.qs = qs;
   renderHero();
   renderApps();
   if (cur) {
@@ -1041,7 +1070,7 @@ document.addEventListener('pointerover', function (e) {
 chans.forEach(function (c) {
   c.addEventListener('click', function () {
     var i = +c.getAttribute('data-i'), r = apps.getBoundingClientRect(), span = r.height - S.H;
-    window.scrollTo({ top: (window.scrollY || 0) + r.top + span * i / (panels.length - 1) + 2, behavior: reduced ? 'auto' : 'smooth' });
+    window.scrollTo({ top: (window.scrollY || 0) + r.top + span * Q_END * i / (panels.length - 1) + 2, behavior: reduced ? 'auto' : 'smooth' });
   });
 });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { dirty = true; });

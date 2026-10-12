@@ -37,7 +37,7 @@ gh repo create awakeprod-site --private --source=. --push
 
 Le domaine officiel (RNE) est `awakeprod.fr` et l'URL canonique du site est `https://www.awakeprod.fr/`. Projet Pages → **Custom domains** → **Set up a custom domain** → `www.awakeprod.fr`, puis `awakeprod.fr`. Cloudflare crée les enregistrements DNS tout seul.
 
-L'ancien domaine `awakeprod.com` doit rediriger en 301 vers `https://www.awakeprod.fr` (chemin conservé). Cela se règle dans le dashboard Cloudflare, zone `awakeprod.com` → **Rules** → **Redirect Rules**, pas dans ce dépôt.
+Les deux hôtes servent la même page ; la balise `<link rel="canonical">` désigne `www.awakeprod.fr`. Pour n'exposer qu'un seul hôte, ajouter dans la zone `awakeprod.fr` une Redirect Rule 301 de `awakeprod.fr` vers `https://www.awakeprod.fr` (chemin et query conservés).
 
 Si le domaine avait déjà un enregistrement A / CNAME vers OVH pour le site, supprime-le d'abord dans DNS, sinon Pages refusera.
 

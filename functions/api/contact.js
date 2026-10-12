@@ -3,7 +3,7 @@
 // Required environment variables (Pages project → Settings → Variables and Secrets):
 //   RESEND_API_KEY  — your Resend API key (secret)
 //   CONTACT_TO      — where messages go, e.g. julien@awakeprod.fr
-//   CONTACT_FROM    — a verified sender on your Resend domain, e.g. site@awakeprod.com
+//   CONTACT_FROM    — a verified sender on your Resend domain, e.g. site@awakeprod.fr
 
 export async function onRequestPost({ request, env }) {
   let data;
@@ -27,7 +27,7 @@ export async function onRequestPost({ request, env }) {
       from: `AwakeProd site <${env.CONTACT_FROM}>`,
       to: [env.CONTACT_TO],
       reply_to: email,
-      subject: `[awakeprod.com] ${topic || 'Contact'} — ${name}`,
+      subject: `[awakeprod.fr] ${topic || 'Contact'} — ${name}`,
       text: `From: ${name} <${email}>\nSubject: ${topic}\n\n${message}`,
     }),
   });

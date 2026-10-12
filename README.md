@@ -5,6 +5,7 @@ Site vitrine d'AwakeProd. Statique, sans build : un `index.html`, un dossier `im
 ```
 index.html              la page (HTML + CSS + JS, tout inline)
 img/                    captures produits (WebP), favicon, image de partage
+functions/_middleware.js  redirection 301 de awakeprod.fr vers www.awakeprod.fr (Cloudflare Pages Function)
 functions/api/contact.js  formulaire de contact → e-mail via Resend (Cloudflare Pages Function)
 _headers                en-têtes de sécurité et cache
 robots.txt, sitemap.xml
@@ -37,7 +38,7 @@ gh repo create awakeprod-site --private --source=. --push
 
 Le domaine officiel (RNE) est `awakeprod.fr` et l'URL canonique du site est `https://www.awakeprod.fr/`. Projet Pages → **Custom domains** → **Set up a custom domain** → `www.awakeprod.fr`, puis `awakeprod.fr`. Cloudflare crée les enregistrements DNS tout seul.
 
-Les deux hôtes servent la même page ; la balise `<link rel="canonical">` désigne `www.awakeprod.fr`. Pour n'exposer qu'un seul hôte, ajouter dans la zone `awakeprod.fr` une Redirect Rule 301 de `awakeprod.fr` vers `https://www.awakeprod.fr` (chemin et query conservés).
+Un seul hôte public : `functions/_middleware.js` redirige en 301 toute requête sur `awakeprod.fr` vers `https://www.awakeprod.fr` (chemin et query conservés). Les autres hôtes (`www`, prévisualisations `*.pages.dev`, local) sont servis tels quels. Rien à configurer dans le dashboard.
 
 Si le domaine avait déjà un enregistrement A / CNAME vers OVH pour le site, supprime-le d'abord dans DNS, sinon Pages refusera.
 

@@ -1,20 +1,40 @@
-:root{color-scheme:light}
+/* Molette pages: late-90s print-ad look. Instrument Serif (OFL, self-hosted) for headlines, system font for text, warm beige paper. */
+@font-face{font-family:"Instrument Serif";src:url(/molette/fonts/InstrumentSerif-Regular.ttf) format("truetype");font-display:swap}
+:root{color-scheme:light;--paper:#e9e7e1;--ink:#111;--text:#2b2a27;--mute:#6a6862;--rule:#cfccc3;--link:#0b57b0}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:#fff;color:#1d1d1f;font:17px/1.47 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:680px;margin:0 auto;padding:56px 22px 72px}
-.icon{display:block;margin-bottom:14px;width:80px;height:80px;border-radius:18px;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
-h1{font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-.022em;margin:20px 0 8px}
-h2{font-size:21px;line-height:1.24;font-weight:600;letter-spacing:-.012em;margin:36px 0 6px}
+body{margin:0;background:var(--paper);color:var(--text);font:17px/1.55 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:720px;margin:0 auto;padding:56px 22px 72px}
+.icon{display:block;width:80px;height:80px;border-radius:18px;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+h1,h2,.serif{font-family:"Instrument Serif",Georgia,"Times New Roman",serif;font-weight:400;color:var(--ink);letter-spacing:-.01em}
+h1{font-size:56px;line-height:1;margin:22px 0 10px}
+h2{font-size:34px;line-height:1.05;margin:44px 0 8px}
 p,ul{margin:0 0 12px}
 ul{padding-left:22px}
 li{margin-bottom:6px}
-a{color:#0066cc;text-decoration:none}
+a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
-.sub,.date,footer{color:#6e6e73}
-.sub{font-size:21px;line-height:1.3;margin:0 0 20px}
+.sub,.date,footer{color:var(--mute)}
+.sub{font-size:21px;line-height:1.35;margin:0 0 20px}
 .date{font-size:14px}
 nav{font-size:14px;margin-bottom:8px}
-section+section{margin-top:64px;padding-top:48px;border-top:1px solid #d2d2d7}
-footer{font-size:12px;line-height:1.4;margin-top:64px;padding-top:16px;border-top:1px solid #d2d2d7}
-@media(max-width:480px){main{padding-top:36px}h1{font-size:32px}.sub{font-size:19px}}
+section+section{margin-top:64px;padding-top:48px;border-top:1px solid var(--rule)}
+footer{font-size:13px;line-height:1.5;margin-top:64px;padding-top:16px;border-top:1px solid var(--rule)}
+
+/* product page */
+.page{max-width:1080px}
+.hero{text-align:center;padding-top:12px}
+.hero .icon{margin:0 auto}
+.hero h1{font-size:clamp(56px,10vw,104px);line-height:.95;margin:28px 0 18px}
+.hero .sub{max-width:560px;margin:0 auto 28px}
+.badge img{height:54px;width:auto;display:inline-block}
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:64px 0 8px}
+.shots img{width:100%;height:auto;display:block;border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
+.cols{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 56px;margin-top:24px}
+.cols h2{margin-top:40px}
+.price{text-align:center;margin:80px auto 0;max-width:620px}
+.price h2{font-size:clamp(40px,6vw,64px);margin:0 0 12px}
+.faq{max-width:720px;margin:88px auto 0}
+.faq h3{font-size:19px;margin:28px 0 6px;color:var(--ink)}
+@media(max-width:760px){.shots{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}}
+@media(max-width:480px){main{padding-top:36px}h1{font-size:44px}.sub{font-size:19px}}

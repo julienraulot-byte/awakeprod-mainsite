@@ -1,0 +1,20 @@
+# AwakeProd
+
+> AwakeProd is the trade name of Julien Raulot, an independent developer in France who makes iPhone apps.
+
+## Molette
+
+Molette is an iPhone music player for your own files, with a clicking wheel like a 2000s pocket player.
+- Plays MP3, AAC, M4A, ALAC, FLAC, WAV, AIFF and CAF, gapless, offline.
+- No account, no server, no ads, no data collected. Music is copied in with Finder, Apple Devices on Windows, or the Files app.
+- Free for the first 25 albums. Unlimited is a one-time in-app purchase (not a subscription): every album, Clean Up Names, seven colored cases, a Home Screen widget.
+- iOS 17 or later. Interface in 15 languages.
+- App Store: https://apps.apple.com/app/id6834086865
+- [Molette (English)](https://www.awakeprod.fr/molette/): features and FAQ
+- [Molette (français)](https://www.awakeprod.fr/molette/fr/)
+- [Support](https://www.awakeprod.fr/molette/support/): adding music, formats, restoring a purchase
+- [Privacy](https://www.awakeprod.fr/molette/privacy/): Molette collects no data
+
+## NITRODRIVE
+
+- [NITRODRIVE](https://www.awakeprod.fr/nitrodrive/): arcade racing game for iPhone

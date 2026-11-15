@@ -20,13 +20,13 @@ Molette is an iPhone music player for your own files, with a clicking wheel like
 NITRODRIVE is an arcade racing game for iPhone, played in portrait with one thumb. The point of the game is the takedown: ramming rivals into the walls and the traffic.
 - Controls: slide the thumb to steer (the throttle is automatic); hold into a tight bend to drift and charge a turbo; lift to fire the turbo; double tap to boost (gauge a third full); triple tap for NITRO (gauge full); a short tap uses the item picked up. If you crash, you get one second to steer your wreck into a rival.
 - 20 city circuits, among them NEON, RIVIERA, CANYON, SHIBUYA, MANHATTAN, ROME, THAMES, TOY ROOM and ORBIT. 9 cars, from a hatchback to a formula car.
-- Price: License C is free with no time limit (four circuits, a cup, time trials, free runs, the daily challenge). One in-app purchase of 4.99 USD ("Full Game", non-consumable, Family Sharing enabled) unlocks licenses B, A and S, the PRO cup, every circuit and every car, for good. No subscription, no ads, no energy, no gacha, no account.
+- Price: License C is free (four circuits, their cup, time trials and free runs). One in-app purchase of 4.99 USD ("Full Game", non-consumable, Family Sharing included) unlocks licenses B, A and S for good: 12 more circuits right away, and the cars, the PRO cup and its 4 circuits as you earn stars. Nothing else to buy, ever. No subscription, no ads, no energy, no loot boxes, no account.
 - Every day: a daily challenge on a new circuit with a world board; a world top 5 on every time trial; ghosts to race; challenge links to send a friend.
 - Offline: everything works without a connection except the world boards.
 - Privacy: no account, no ads, no analytics. The world boards receive a nickname, a random id created by the game, a country code, the circuit, the score and the ghost, only when you finish a daily challenge or beat a time-trial record.
 - Languages: English and French. iOS 15 or later. Made in France with Godot Engine by Julien Raulot (AwakeProd). iPhone first; Android later.
 - App Store: not yet available (coming soon).
-- [NITRODRIVE (English)](https://www.awakeprod.fr/nitrodrive/): facts, controls, circuits, price and FAQ
+- [NITRODRIVE (English)](https://www.awakeprod.fr/nitrodrive/): screenshots, features, price and FAQ
 - [NITRODRIVE (français)](https://www.awakeprod.fr/nitrodrive/fr/)
 - [Support](https://www.awakeprod.fr/nitrodrive/support/): controls, restoring a purchase, boards and ghosts, deleting your data
 - [Privacy](https://www.awakeprod.fr/nitrodrive/privacy/): what the world boards receive, what stays on the phone

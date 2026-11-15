@@ -1,25 +1,25 @@
-/* NITRODRIVE support and privacy pages: the game's poster language (Kanit, yellow on black), self-hosted fonts (OFL, see /nitrodrive/fonts/OFL.txt). */
-@font-face{font-family:Kanit;font-style:italic;font-weight:900;font-display:swap;src:url(/nitrodrive/fonts/Kanit-BlackItalic.woff2) format("woff2")}
-@font-face{font-family:Kanit;font-style:normal;font-weight:500;font-display:swap;src:url(/nitrodrive/fonts/Kanit-Medium.woff2) format("woff2")}
+/* NITRODRIVE support and privacy pages: the calm look of the product page (Kanit headings, system body, near-black). Fonts self-hosted, OFL: /nitrodrive/fonts/OFL.txt */
 @font-face{font-family:Kanit;font-style:normal;font-weight:700;font-display:swap;src:url(/nitrodrive/fonts/Kanit-Bold.woff2) format("woff2")}
-:root{color-scheme:dark;--blk:#0e0d0c;--blk2:#1d1b19;--ink:#f4f4f1;--yel:#ffd400;--cy:#19d3ff}
+:root{color-scheme:dark;--bg:#0b0b0c;--line:#26262a;--ink:#f5f5f7;--mute:#a1a1a6;--yel:#ffd60a}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--blk);color:var(--ink);font:500 18px/1.5 Kanit,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:720px;margin:0 auto;padding:40px 24px 72px}
-.icon{display:block;margin-bottom:28px;width:64px;height:64px;border-radius:14px}
-h1,h2{font-family:Kanit,sans-serif;font-style:italic;font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.95;margin:0}
-h1{font-size:clamp(44px,8vw,72px);color:var(--yel);margin:0 0 12px}
-h2{font-size:26px;margin:40px 0 8px}
-p,ul{margin:0 0 12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:32px 16px 64px}
+.icon{display:block;margin-bottom:32px;width:56px;height:56px;border-radius:13px}
+h1,h2{font-family:Kanit,-apple-system,"Segoe UI",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin:0}
+h1{font-size:clamp(32px,6vw,44px);margin:0 0 10px}
+h2{font-size:21px;margin:36px 0 8px}
+p,ul{margin:0 0 12px;color:var(--mute)}
 ul{padding-left:22px}
 li{margin-bottom:6px}
-a{color:var(--cy);text-decoration:none}
-a:hover{text-decoration:underline}
-.sub{font-size:22px;line-height:1.35;margin:0 0 16px}
-.date{font-size:16px;color:#b7b3ab}
-nav{font-size:16px;margin-bottom:8px}
-section+section{margin-top:72px;padding-top:40px;background:linear-gradient(var(--blk2),var(--blk2)) top/100% 8px no-repeat}
-footer{font-size:14px;line-height:1.5;margin-top:72px;padding-top:24px;color:#b7b3ab}
+a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+a:hover{text-decoration-color:var(--ink)}
+:focus-visible{outline:3px solid var(--yel);outline-offset:3px;border-radius:6px}
+.sub{font-size:19px;line-height:1.4;color:var(--ink);margin:0 0 8px}
+.date{font-size:15px}
+nav{font-size:15px;margin-bottom:12px;color:var(--mute)}
+nav a{display:inline-flex;align-items:center;min-height:44px}
+section+section{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+footer{font-size:14px;line-height:1.6;margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--mute)}
 footer a{color:inherit}
-@media(max-width:480px){main{padding-top:28px}.sub{font-size:20px}}
+@media(min-width:700px){main{padding:48px 24px 80px}}

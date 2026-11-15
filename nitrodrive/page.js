@@ -21,7 +21,8 @@ d.querySelectorAll('[data-n]').forEach(function(el){el.textContent='0';co.observ
 var rail=d.querySelector('.rail');
 if(rail){var items=[].slice.call(rail.children),wait=false,gap=parseFloat(getComputedStyle(rail).columnGap)||0;
  var lay=function(){wait=false;var c=rail.scrollLeft+rail.clientWidth/2;
-  items.forEach(function(li){var w=li.offsetWidth,x=(li.offsetLeft+w/2-c)/(w+gap),a=Math.min(Math.abs(x),2.2);
+  var xs=items.map(function(li){var w=li.offsetWidth;return (li.offsetLeft+w/2-c)/(w+gap);});
+  items.forEach(function(li,i){var x=xs[i],a=Math.min(Math.abs(x),2.2);
    li.style.transform=RM?'':'rotateY('+(-x*26).toFixed(2)+'deg) translateZ('+(-a*110).toFixed(1)+'px)';
    li.style.opacity=(1-a*.2).toFixed(2);li.classList.toggle('is-c',a<.5);});};
  rail.addEventListener('scroll',function(){if(!wait){wait=true;raf(lay);}},{passive:true});

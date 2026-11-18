@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skyred : combat aérien arcade pour iPhone</title>
+<meta name="description" content="Skyred, c'est du combat aérien arcade en portrait sur iPhone. Douze missions, six boss, des salves de missiles verrouillés, des ailiers et des vagues sans fin en Free Run sur cinq territoires. Gratuit pour commencer, sans pub, sans compte.">
+<link rel="canonical" href="https://www.awakeprod.fr/skyred/fr/">
+<link rel="alternate" hreflang="en" href="https://www.awakeprod.fr/skyred/">
+<link rel="alternate" hreflang="fr" href="https://www.awakeprod.fr/skyred/fr/">
+<link rel="alternate" hreflang="x-default" href="https://www.awakeprod.fr/skyred/">
+<!-- TODO(Julien): once the app is live, add the Smart App Banner <meta name="apple-itunes-app" content="app-id=XXXXXXXXXX">
+     and replace every href="#appstore" with https://apps.apple.com/app/idXXXXXXXXXX. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AwakeProd">
+<meta property="og:title" content="Skyred : combat aérien arcade pour iPhone">
+<meta property="og:description" content="Douze missions, six boss, des salves verrouillées et des vagues sans fin. En portrait, un pouce sur le manche.">
+<meta property="og:url" content="https://www.awakeprod.fr/skyred/fr/">
+<!-- TODO(Julien): a 1200x630 og.jpg (wordmark + phone) is still to make; the poster stands in. -->
+<meta property="og:image" content="https://www.awakeprod.fr/skyred/media/hero-poster.webp">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#020403">
+<link rel="icon" href="/skyred/icon.png">
+<link rel="apple-touch-icon" href="/skyred/icon.png">
+<link rel="preload" href="/skyred/fonts/BigShoulders-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/skyred/fonts/ChakraPetch-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/skyred/media/wordmark.webp" as="image" type="image/webp">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":["VideoGame","SoftwareApplication"],"@id":"https://www.awakeprod.fr/skyred/#game","name":"Skyred","url":"https://www.awakeprod.fr/skyred/",
+ "description":"Arcade jet combat for iPhone, played in portrait. Twelve missions across the Alpine Front, the coast and the sea, the desert canyon and Antarctica, six bosses, salvo missile locks, wingmen and bonuses, and endless Free Run waves on five territories with Game Center boards. Missions 1 to 3 and the Alpine Valley Free Run are free; one in-app purchase unlocks the Full Game. No ads, no account.",
+ "image":"https://www.awakeprod.fr/skyred/icon.png",
+ "applicationCategory":"GameApplication","applicationSubCategory":"Action game","gamePlatform":["iOS","iPhone"],"genre":["Arcade","Action","Flight"],
+ "playMode":"SinglePlayer","isAccessibleForFree":true,
+ "author":{"@type":"Person","name":"Julien Raulot","url":"https://www.awakeprod.fr/"},
+ "publisher":{"@type":"Organization","name":"AwakeProd","url":"https://www.awakeprod.fr/"}},
+{"@type":"BreadcrumbList","itemListElement":[
+ {"@type":"ListItem","position":1,"name":"AwakeProd","item":"https://www.awakeprod.fr/"},
+ {"@type":"ListItem","position":2,"name":"Skyred","item":"https://www.awakeprod.fr/skyred/"}]}
+]}
+</script>
+<link rel="stylesheet" href="/skyred/page.css?v=1">
+<script src="/skyred/page.js?v=1" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<header class="top">
+<a class="top__wm" href="/skyred/" aria-label="Accueil Skyred"><img src="/skyred/media/wordmark-small.webp" alt="Skyred" width="500" height="100"></a>
+<nav aria-label="Page">
+<a class="hide-s" href="#flight">Vol</a>
+<a class="hide-s" href="#campaign">Campagne</a>
+<a class="hide-s" href="#free-run">Free Run</a>
+<a href="#price">Prix</a>
+<a href="/skyred/" hreflang="en" lang="en">EN</a>
+</nav>
+</header>
+
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+<div class="wrap hero__in">
+<div class="hero__copy">
+<p class="kick">Combat aérien arcade pour iPhone</p>
+<div class="hero__wm"><img src="/skyred/media/wordmark.webp" alt="Skyred" width="1600" height="320" fetchpriority="high"></div>
+<h1 id="h1">Vous êtes <em>Red&nbsp;One.</em></h1>
+<p class="lede">Pilotez un chasseur en portrait, au ras des vallées, un pouce sur le manche. <b>Douze missions, six boss</b>, et des vagues sans fin une fois la campagne finie.</p>
+<div class="hero__cta">
+<!-- TODO(Julien): the App Store link once the app is live -->
+<a class="key" href="#appstore"><svg viewBox="0 0 17 21" aria-hidden="true"><path d="M14.2 11.1c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.4 1.3-2.7 1.3-2.8 0 0-2.5-1-2.5-3.8zM11.8 3.9c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg><span><small>Bientôt sur</small><b>App Store</b></span></a>
+<p class="note">Gratuit pour commencer : trois missions et l'Alpine Valley sont offertes.</p>
+</div>
+</div>
+<div class="hero__stage stage" aria-hidden="true">
+<div class="lad lad--l"><b></b></div>
+<div class="lad lad--r"><b></b></div>
+<div class="ro ro--l"><small>SPD</small><span data-ro="spd">420</span></div>
+<div class="ro ro--r"><small>ALT</small><span data-ro="alt">3200</span></div>
+<div class="ph">
+<i></i><i></i><i></i><i></i>
+<div class="ph__face"><div class="ph__scr">
+<!-- media slot: hero.mp4 (portrait 9:19.5, about 24 s, silent, under 3 MB) + hero-poster.webp, see SHOT_LIST.md -->
+<video autoplay muted loop playsinline preload="metadata" poster="/skyred/media/hero-poster.webp" width="540" height="1170"><source src="/skyred/media/hero.mp4" type="video/mp4"></video>
+</div><span class="ph__isl"></span></div>
+<span class="ph__gl"></span>
+<span class="ph__sh"></span>
+</div>
+<svg class="sight" viewBox="0 0 100 100" fill="none" stroke="#7CFF6B" stroke-width="2"><circle cx="50" cy="50" r="34" stroke-dasharray="40 13.4" transform="rotate(-20 50 50)"/><path d="M50 8v12M50 80v12M8 50h12M80 50h12"/><circle cx="50" cy="50" r="2.5" fill="#F2EFE8" stroke="none"/></svg>
+</div>
+</div>
+</section>
+
+<div class="tape" aria-hidden="true">
+<span class="tape__n"></span>
+<div class="tape__t"><span>Alpine Valley</span><span>Karst Bay</span><span>Night Sea</span><span>Desert Canyon</span><span>Antarctica</span><span>Alpine Valley</span><span>Karst Bay</span><span>Night Sea</span><span>Desert Canyon</span><span>Antarctica</span></div>
+</div>
+
+<section class="radio" aria-labelledby="radio-h">
+<div class="wrap">
+<h2 id="radio-h" class="kick">L'histoire</h2>
+<ol>
+<li>Le Directoire était payé pour garder notre ciel.</li>
+<li>Cette nuit, il l'a pris pour lui.</li>
+<li>Une seule escadrille vole encore.</li>
+<li>Vous êtes Red One.</li>
+</ol>
+<p class="who">Prologue, mission 1</p>
+</div>
+</section>
+
+<section class="sec" id="flight" aria-labelledby="flight-h">
+<div class="wrap split">
+<div>
+<p class="kick">Vol</p>
+<h2 id="flight-h" class="disp">Combats tournoyants au fond des <span class="lk"><em>vallées</em></span></h2>
+<p class="lede">Le pouce droit pilote depuis n'importe où sur l'écran, le gauche tient les armes. Collez à la rivière, passez sous la crête, remontez par le col avec un chasseur aux trousses.</p>
+<ul class="facts">
+<li><b>Canon auto</b><span>Le canon tire dès qu'une cible passe dans le viseur. Sous 250 m, il frappe deux fois plus fort.</span></li>
+<li><b>Esquive</b><span>Un missile dans vos six heures ? Basculez sec et il passe à côté.</span></li>
+<li><b>Frôler</b><span>Les tirs qui vous ratent de peu chargent votre BARRAGE.</span></li>
+</ul>
+</div>
+<div class="stage rv">
+<!-- media slot: screen-dogfight-440/880.webp -->
+<div class="ph" style="--ry:-20deg;--rz:2deg"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-dogfight-440.webp" srcset="/skyred/media/screen-dogfight-440.webp 440w, /skyred/media/screen-dogfight-880.webp 880w" sizes="(min-width:960px) 290px, 56vw" width="880" height="1950" alt="Un combat au-dessus d'un lac alpin : deux drones encadrés en rouge sur le HUD, le jet au ras de l'eau" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div>
+</div>
+</div>
+</section>
+
+<section class="sec" aria-labelledby="salvo-h">
+<div class="wrap split split--rev">
+<div>
+<p class="kick">Missiles</p>
+<h2 id="salvo-h" class="disp">Quatre verrous. <span class="lk"><em>Une</em></span> salve.</h2>
+<p class="lede">Maintenez MSL et balayez le ciel avec le cercle. Chaque contact touché est verrouillé, et le son monte à chaque fois. Relâchez : toute la salve part, <b>un missile par verrou, le score multiplié d'autant</b>.</p>
+<ul class="facts">
+<li><b>Roquettes</b><span>Une rafale pour les bateaux, les camions et les batteries.</span></li>
+<li><b>Bombes</b><span>Larguez sur le repère pour les cibles au sol.</span></li>
+<li><b>Barrage</b><span>Remplissez la jauge et nettoyez le ciel. Pleine, elle part seule et vous sauve du coup qui vous aurait abattu.</span></li>
+</ul>
+</div>
+<div class="scope" id="scope" aria-hidden="true">
+<svg viewBox="0 0 400 400">
+<path class="grid" d="M0 100h400M0 200h400M0 300h400M100 0v400M200 0v400M300 0v400"/>
+<circle class="ring" cx="200" cy="180" r="150" stroke-dasharray="6 10" opacity=".55"/>
+<path class="ring" d="M192 180h16M200 172v16"/>
+<g class="tgt t1" transform="translate(110 122)"><path d="M-15 7L0-11 15 7 0 2z"/><path class="box" d="M-24-14v-10h10M14-24h10v10M24 14v10H14M-14 24h-10v-10"/></g>
+<g class="tgt t2" transform="translate(272 92)"><path d="M-15 7L0-11 15 7 0 2z"/><path class="box" d="M-24-14v-10h10M14-24h10v10M24 14v10H14M-14 24h-10v-10"/></g>
+<g class="tgt t3" transform="translate(302 214)"><path d="M-15 7L0-11 15 7 0 2z"/><path class="box" d="M-24-14v-10h10M14-24h10v10M24 14v10H14M-14 24h-10v-10"/></g>
+<g class="tgt t4" transform="translate(152 248)"><path d="M-15 7L0-11 15 7 0 2z"/><path class="box" d="M-24-14v-10h10M14-24h10v10M24 14v10H14M-14 24h-10v-10"/></g>
+<path class="msl" d="M200 392Q170 280 110 122"/><path class="msl" d="M200 392Q250 250 272 92"/><path class="msl" d="M200 392Q290 300 302 214"/><path class="msl" d="M200 392Q160 320 152 248"/>
+<text x="0" y="14">LOCK</text>
+<rect class="pip" data-pip="1" x="58" y="3" width="11" height="11"/><rect class="pip" data-pip="2" x="76" y="3" width="11" height="11"/><rect class="pip" data-pip="3" x="94" y="3" width="11" height="11"/><rect class="pip" data-pip="4" x="112" y="3" width="11" height="11"/>
+<text class="big" x="400" y="380" text-anchor="end">SALVO &#215;4</text>
+</svg>
+</div>
+</div>
+</section>
+
+<section class="sec" id="campaign" aria-labelledby="camp-h">
+<div class="wrap">
+<p class="kick">Campagne</p>
+<h2 id="camp-h" class="disp">Douze missions. <span class="lk"><em>Six</em></span> boss.</h2>
+<p class="lede">Une guerre, de la vallée alpine à la banquise de l'Antarctique. Chaque acte finit sur une machine grande comme une ville : abattez ses canons, son radar et ses moteurs un par un.</p>
+<div class="camp" style="margin-top:56px">
+<div class="camp__stage stage rv">
+<!-- media slot: screen-briefing-440/880.webp -->
+<div class="ph"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-briefing-440.webp" srcset="/skyred/media/screen-briefing-440.webp 440w, /skyred/media/screen-briefing-880.webp 880w" sizes="290px" width="880" height="1950" alt="Le briefing de la mission 3, Glacier Gate : la carte, trois vagues, puis le boss TALUS" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div>
+</div>
+<div>
+<div class="camp__inline stage rv"><div class="ph"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-briefing-440.webp" srcset="/skyred/media/screen-briefing-440.webp 440w, /skyred/media/screen-briefing-880.webp 880w" sizes="56vw" width="880" height="1950" alt="" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div></div>
+<ol class="route">
+<li class="act">Acte 1 · Alpine Front</li>
+<li class="wp"><h3>First Light <small>M01</small></h3><p>À l'aube, un convoi monte du matériel radar dans la vallée. Montrez-leur que quelqu'un vole encore.</p></li>
+<li class="wp"><h3>Pass Breaker <small>M02</small></h3><p>Des sites de missiles tiennent le col. Vos premiers SAM, sous une bourrasque de neige.</p></li>
+<li class="wp"><h3>Glacier Gate <small>M03</small> <span class="boss">Boss · TALUS</span></h3><p>Une forteresse sur chenilles descend le glacier. Arrêtez-la avant la vallée.</p></li>
+<li class="act">Acte 2 · Coast and Sea</li>
+<li class="wp"><h3>Downriver <small>M04</small></h3><p>Un train blindé file vers la mer. L'escadrille Gilt envoie son premier as.</p></li>
+<li class="wp"><h3>Limestone Teeth <small>M05</small></h3><p>Des batteries se cachent entre les pitons de la baie pendant que la brume se lève.</p></li>
+<li class="wp"><h3>Drydock <small>M06</small> <span class="boss">Boss · HALBERD</span></h3><p>Un croiseur quitte le port au coucher du soleil. Coulez-le avant la sortie.</p></li>
+<li class="wp"><h3>Moonwake <small>M07</small> <span class="boss">Boss · UNDERTOW</span></h3><p>Suivez le sillage de la flotte au clair de lune et trouvez le sous-marin lance-missiles.</p></li>
+<li class="wp"><h3>Storm Front <small>M08</small></h3><p>Quatre piquets radar et un pétrolier sous l'orage, et l'escadrille Gilt à vos trousses.</p></li>
+<li class="act">Acte 3 · Iron Coast and Canyon</li>
+<li class="wp"><h3>Iron Coast <small>M09</small></h3><p>Des bombardiers lourds foncent vers le phare, mitrailleurs de queue en couverture.</p></li>
+<li class="wp"><h3>Furnace Canyon <small>M10</small> <span class="boss">Boss · SIROCCO</span></h3><p>Filez dans le canyon sous les crêtes. Une canonnière à drones sort de la tempête de sable.</p></li>
+<li class="act">Acte 4 · Southern Reach</li>
+<li class="wp"><h3>Southern Reach <small>M11</small> <span class="boss">Boss · NIMBUS</span></h3><p>Traversez la mer australe sous l'aurore et abattez leur aile volante de commandement.</p></li>
+<li class="wp"><h3>Zero Meridian <small>M12</small> <span class="boss">Boss · SPIRE</span></h3><p>La fusée est sur le pas de tir. Quatre minutes au compteur.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="free-run" aria-labelledby="free-h">
+<div class="wrap">
+<p class="kick">Free Run</p>
+<h2 id="free-h" class="disp">Vagues sans fin. Votre <span class="lk"><em>record</em></span>.</h2>
+<p class="lede">Choisissez un territoire et une difficulté, et volez jusqu'à la chute. Chaque vague est plus dure que la précédente, et <b>chaque territoire a son classement Game Center</b>.</p>
+<ul class="terr">
+<li><figure><div class="tf"><img src="/skyred/media/territory-alpine.webp" width="330" height="186" alt="L'Alpine Valley vue du ciel" loading="lazy" decoding="async"></div><figcaption>Alpine Valley <span>Gratuit</span></figcaption></figure></li>
+<li><figure><div class="tf"><img src="/skyred/media/territory-karst.webp" width="330" height="186" alt="Les pitons calcaires de Karst Bay" loading="lazy" decoding="async"></div><figcaption>Karst Bay</figcaption></figure></li>
+<li><figure><div class="tf"><img src="/skyred/media/territory-sea.webp" width="330" height="186" alt="La Night Sea sous la lune" loading="lazy" decoding="async"></div><figcaption>Night Sea</figcaption></figure></li>
+<li><figure><div class="tf"><img src="/skyred/media/territory-desert.webp" width="330" height="186" alt="Des mesas dans Desert Canyon" loading="lazy" decoding="async"></div><figcaption>Desert Canyon</figcaption></figure></li>
+<li><figure><div class="tf"><img src="/skyred/media/territory-antarctic.webp" width="330" height="186" alt="La banquise au large de l'Antarctique" loading="lazy" decoding="async"></div><figcaption>Antarctica</figcaption></figure></li>
+</ul>
+</div>
+</section>
+
+<section class="sec" id="hangar" aria-labelledby="hangar-h">
+<div class="wrap split split--rev">
+<div>
+<p class="kick">Hangar</p>
+<h2 id="hangar-h" class="disp">Trois jets. Votre <span class="lk"><em>config</em></span>.</h2>
+<p class="lede">Les missions rapportent des pièces. Dépensez-les dans le moteur, les ailes, le canon, les pylônes, le blindage, les capteurs et les contre-mesures, puis choisissez une peinture.</p>
+<ul class="jets">
+<li><h3>Vanguard</h3><em>Multirôle</em><p>Équilibré et tolérant. Idéal pour débuter.</p></li>
+<li><h3>Lance</h3><em>Intercepteur</em><p>Rapide et vif, avec un boost qui recharge vite. Blindage léger.</p></li>
+<li><h3>Bastion</h3><em>Chasseur lourd</em><p>Lent et costaud. Frappe fort et emporte plus de roquettes.</p></li>
+</ul>
+<p class="body" style="margin-top:28px">Les ennemis abattus lâchent des bonus en vol. <b>Appelez vos ailiers</b> : deux drones se calent en formation et tirent sur ce que vous verrouillez.</p>
+<ul class="chips" aria-label="Bonus">
+<li>Repair</li><li>Rearm</li><li>Burner</li><li>Hot gun</li><li>Score ×2</li><li>Strike</li><li>Shield</li><li>Gun level up</li><li>Wingmen</li>
+</ul>
+</div>
+<div class="stage rv">
+<!-- media slot: screen-hangar-440/880.webp -->
+<div class="ph" style="--ry:18deg;--rz:-2deg"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-hangar-440.webp" srcset="/skyred/media/screen-hangar-440.webp 440w, /skyred/media/screen-hangar-880.webp 880w" sizes="(min-width:960px) 290px, 56vw" width="880" height="1950" alt="Le hangar : le Vanguard sur son socle, les emplacements d'amélioration et l'onglet peinture" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div>
+</div>
+</div>
+</section>
+
+<section class="sec" aria-labelledby="wx-h">
+<div class="wrap split">
+<div>
+<p class="kick">Météo</p>
+<h2 id="wx-h" class="disp">Droit dans la <span class="lk"><em>tempête</em></span>.</h2>
+<p class="lede">La lumière et la météo changent pendant la mission. Vous décollez à l'aube et finissez dans la bourrasque.</p>
+<ul class="wx">
+<li><b>Alpes</b>L'aube sur le lac, la neige sur le col</li>
+<li><b>Karst</b>La brume entre les pitons</li>
+<li><b>Mer</b>Le clair de lune, puis la foudre</li>
+<li><b>Désert</b>Une tempête de sable dans le canyon</li>
+<li><b>Antarctique</b>L'aurore sur la glace</li>
+<li><b>Chaque vol</b>On repart en 2 secondes</li>
+</ul>
+</div>
+<div class="fan rv">
+<!-- media slots: screen-lowlevel-440/880.webp and screen-storm-440/880.webp -->
+<div class="ph"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-lowlevel-440.webp" srcset="/skyred/media/screen-lowlevel-440.webp 440w, /skyred/media/screen-lowlevel-880.webp 880w" sizes="(min-width:960px) 260px, 46vw" width="880" height="1950" alt="Glacier Gate : le jet au ras de la neige, vers un site de tourelles" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div>
+<div class="ph"><i></i><i></i><i></i><i></i><div class="ph__face"><div class="ph__scr"><img src="/skyred/media/screen-storm-440.webp" srcset="/skyred/media/screen-storm-440.webp 440w, /skyred/media/screen-storm-880.webp 880w" sizes="(min-width:960px) 260px, 46vw" width="880" height="1950" alt="Un jet sous la pluie au-dessus d'une mer démontée" loading="lazy" decoding="async"></div><span class="ph__isl"></span></div><span class="ph__gl"></span><span class="ph__sh"></span></div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="price" aria-labelledby="price-h">
+<div class="wrap">
+<p class="kick">Prix</p>
+<h2 id="price-h" class="disp">Trois missions <span class="lk"><em>offertes</em></span>.</h2>
+<div class="offer">
+<div class="plan"><h3><small>Gratuit</small>Alpine Front</h3><p>Les missions 1 à 3, combat contre TALUS compris, et le Free Run dans l'Alpine Valley. À vous, sans limite de temps.</p></div>
+<div class="plan plan--full"><h3><small>Un seul achat</small>Jeu complet</h3><p>Les douze missions et les cinq territoires de Free Run, pour de bon. L'App Store affiche le prix dans votre devise.</p></div>
+</div>
+<ul class="nos"><li>Sans pub</li><li>Sans compte</li><li>Sans abonnement</li><li>Hors ligne</li><li>Classements Game Center</li></ul>
+</div>
+</section>
+
+<section class="sec faq" id="faq" aria-labelledby="faq-h">
+<div class="wrap">
+<p class="kick">FAQ</p>
+<h2 id="faq-h" class="disp">Questions.</h2>
+<details><summary>Comment se pilote-t-il ?</summary><p class="a">Deux pouces, en portrait. Posez le pouce droit n'importe où : il devient le manche. Le pouce gauche a les touches : GUN, MSL, AB pour la postcombustion, les deux esquives, FACE pour pivoter vers une cible, BONUS et BARRAGE. Le canon tire aussi tout seul quand une cible est dans le viseur.</p></details>
+<details><summary>Qu'est-ce qui est gratuit ?</summary><p class="a">Les missions 1 à 3 (l'Alpine Front, boss compris) et le Free Run dans l'Alpine Valley. Un seul achat débloque le jeu complet : les neuf autres missions et les quatre autres territoires. Il se restaure sur tout iPhone connecté au même identifiant Apple.</p></details>
+<details><summary>Skyred marche-t-il hors ligne ?</summary><p class="a">Oui. Tout le jeu se joue sans connexion. Les scores Game Center partent quand vous êtes de nouveau en ligne et connecté.</p></details>
+<details><summary>Faut-il un compte ?</summary><p class="a">Non. Pas de pub, pas de statistiques. Game Center est facultatif : si vous êtes connecté, vos meilleurs scores vont dans ses classements.</p></details>
+</div>
+</section>
+
+<section class="sec end" aria-labelledby="end-h">
+<div class="wrap">
+<img class="wm" src="/skyred/media/wordmark.webp" alt="" width="1600" height="320" loading="lazy">
+<h2 id="end-h" class="disp">Le ciel est encore <span class="lk"><em>à nous</em></span>.</h2>
+<a class="key" href="#appstore"><svg viewBox="0 0 17 21" aria-hidden="true"><path d="M14.2 11.1c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.4 1.3-2.7 1.3-2.8 0 0-2.5-1-2.5-3.8zM11.8 3.9c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg><span><small>Bientôt sur</small><b>App Store</b></span></a>
+</div>
+</section>
+</main>
+
+<footer class="foot">
+<div class="wrap">
+<ul>
+<li><a href="/skyred/support/#fr">Assistance</a></li>
+<li><a href="/skyred/privacy/#fr">Confidentialité</a></li>
+<li><a href="mailto:julien@awakeprod.fr">julien@awakeprod.fr</a></li>
+<li><a href="/skyred/" hreflang="en" lang="en">In English</a></li>
+<li><a href="https://www.awakeprod.fr/">awakeprod.fr</a></li>
+</ul>
+<p>Skyred est fait en France par Julien Raulot, AwakeProd, avec Godot Engine.</p>
+<p class="legal">© 2026 Julien Raulot (AwakeProd). Apple, le logo Apple, iPhone et Game Center sont des marques d'Apple Inc., déposées aux États-Unis et dans d'autres pays. App Store est une marque de service d'Apple Inc. Skyred n'est pas affilié à Apple.</p>
+</div>
+</footer>
+</body>
+</html>

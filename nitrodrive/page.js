@@ -1,21 +1,28 @@
-/* NITRODRIVE page: counters, 3D rail, sticky steps, reveals. No framework, no network. Everything degrades to the static CSS layout. */
+/* NITRODRIVE page: hero video, bottom bar, 3D rail, sticky steps, reveals. No framework, no network. Everything degrades to the static CSS layout. */
 (function(){
 var d=document,h=d.documentElement,RM=matchMedia('(prefers-reduced-motion: reduce)').matches,raf=requestAnimationFrame;
 h.classList.add('js');
-var v=d.querySelector('.hero video');
-if(v&&RM){v.removeAttribute('autoplay');v.pause();}
-d.addEventListener('visibilitychange',function(){h.classList.toggle('hid',d.hidden);if(v&&!RM){d.hidden?v.pause():v.play().catch(function(){});}});
+/* hero video: loaded by JS only, never under reduced motion or Save-Data (the poster stays) */
+var c=navigator.connection,v=d.querySelector('.hero video[data-src]'),heroIn=true;
+if(v&&!RM&&!(c&&c.saveData)){v.src=v.dataset.src;v.play().catch(function(){});}else v=null;
+function vid(){if(v){(heroIn&&!d.hidden)?v.play().catch(function(){}):v.pause();}}
+d.addEventListener('visibilitychange',function(){h.classList.toggle('hid',d.hidden);vid();});
+/* the bottom bar copies the hero store button, so launch day is one edit in the hero */
+var st=d.querySelector('.hero .store');
+d.querySelectorAll('[data-store]').forEach(function(el){el.appendChild(st.cloneNode(true));});
 if(!('IntersectionObserver' in window))return;
+
+/* hero off screen: show the bar, pause the video */
+var bar=d.querySelector('.bar'),hero=d.querySelector('.hero');
+new IntersectionObserver(function(es){heroIn=es[0].isIntersecting;if(bar)bar.classList.toggle('on',!heroIn);vid();}).observe(hero);
+
+/* tickers stop when off screen */
+var to=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('off',!e.isIntersecting);});});
+d.querySelectorAll('.tick').forEach(function(el){to.observe(el);});
 
 /* reveals, once */
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
 d.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
-
-/* counters: count up on reveal, ease-out */
-function count(el){var n=+el.dataset.n,t0=performance.now(),dur=RM?1:1300;
- raf(function f(t){var p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(n*e);if(p<1)raf(f);});}
-var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){count(e.target);co.unobserve(e.target);}});},{threshold:.5});
-d.querySelectorAll('[data-n]').forEach(function(el){el.textContent='0';co.observe(el);});
 
 /* 3D rail: each phone turns away from the centre of the rail */
 var rail=d.querySelector('.rail');

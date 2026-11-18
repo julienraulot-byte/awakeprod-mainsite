@@ -18,8 +18,9 @@ Molette is an iPhone music player for your own files, with a clicking wheel like
 ## NITRODRIVE
 
 NITRODRIVE is an arcade racing game for iPhone, played in portrait with one thumb. The point of the game is the takedown: ramming rivals into the walls and the traffic.
+- In short: free to start, 4.99 USD once for the full game, no ads, no subscription, playable offline, one thumb, portrait.
 - Controls: slide the thumb to steer (the throttle is automatic); hold into a tight bend to drift and charge a turbo; lift to fire the turbo; double tap to boost (gauge a third full); triple tap for NITRO (gauge full); a short tap uses the item picked up. If you crash, you get one second to steer your wreck into a rival.
-- 20 city circuits, among them NEON, RIVIERA, CANYON, SHIBUYA, MANHATTAN, ROME, THAMES, TOY ROOM and ORBIT. 9 cars, from a hatchback to a formula car.
+- 20 city circuits, among them NEON, RIVIERA, CANYON, SHIBUYA, MANHATTAN, ROME, THAMES, TOY ROOM and ORBIT. 9 cars, from a classic sedan to a formula car.
 - Price: License C is free (four circuits, their cup, time trials and free runs). One in-app purchase of 4.99 USD ("Full Game", non-consumable, Family Sharing included) unlocks licenses B, A and S for good: 12 more circuits right away, and the cars, the PRO cup and its 4 circuits as you earn stars. Nothing else to buy, ever. No subscription, no ads, no energy, no loot boxes, no account.
 - Every day: a daily challenge on a new circuit with a world board; a world top 5 on every time trial; ghosts to race; challenge links to send a friend.
 - Offline: everything works without a connection except the world boards.

@@ -25,7 +25,7 @@ NITRODRIVE is an arcade racing game for iPhone, played in portrait with one thum
 - Every day: a daily challenge on a new circuit with a world board; a world top 5 on every time trial; ghosts to race; challenge links to send a friend.
 - Offline: everything works without a connection except the world boards.
 - Privacy: no account, no ads, no analytics. The world boards receive a nickname, a random id created by the game, a country code, the circuit, the score and the ghost, only when you finish a daily challenge or beat a time-trial record.
-- Languages: English and French. iOS 15 or later. Made in France with Godot Engine by Julien Raulot (AwakeProd). iPhone first; Android later.
+- Language: English. iOS 15 or later. Made in France with Godot Engine by Julien Raulot (AwakeProd). iPhone first; Android later.
 - App Store: not yet available (coming soon).
 - [NITRODRIVE (English)](https://www.awakeprod.fr/nitrodrive/): screenshots, features, price and FAQ
 - [NITRODRIVE (français)](https://www.awakeprod.fr/nitrodrive/fr/)

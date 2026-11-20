@@ -57,8 +57,11 @@ h1,h2,h3{margin:0;font-weight:800}
 
 /* ---------- nav ---------- */
 .top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
- padding:12px var(--gut);transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-.top.is-s{background:rgba(2,4,3,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-color:var(--line)}
+ padding:12px var(--gut);padding-top:max(12px,env(safe-area-inset-top));transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+/* the bar's backdrop also covers the status-bar strip above it, so scrolled content never shows over the top edge */
+.top::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:120px;background:inherit}
+video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
+.top.is-s{background:rgba(2,4,3,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-color:var(--line)}
 .top__wm img{width:112px;height:auto}
 .top nav{display:flex;align-items:center;gap:4px}
 .top nav a{font:600 12px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:12px 8px;min-height:44px;display:inline-flex;align-items:center}
@@ -303,7 +306,7 @@ h1,h2,h3{margin:0;font-weight:800}
  .frame i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
  .frame i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
  .frame i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
- .top{padding:18px var(--gut)}
+ .top{padding:18px var(--gut);padding-top:max(18px,env(safe-area-inset-top))}
  .top__wm img{width:132px}
  .hero{padding:96px 0 40px}
  .hero__stage{height:680px;--w2:150px}

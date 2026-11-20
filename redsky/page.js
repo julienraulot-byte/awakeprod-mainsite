@@ -4,11 +4,10 @@
 var d=document,h=d.documentElement,RM=matchMedia('(prefers-reduced-motion: reduce)').matches,raf=requestAnimationFrame;
 h.classList.add('js');
 
-var vids=d.querySelectorAll('video[data-auto]');
-/* muted gameplay loops play on load, reduced motion included (Julien's call); if iOS blocks autoplay (Low Power Mode), the first touch or scroll starts the visible ones */
-function kick(){vids.forEach(function(v){var r=v.getBoundingClientRect();if(v.paused&&r.bottom>0&&r.top<innerHeight)v.play().catch(function(){});});}
-['touchstart','scroll','click'].forEach(function(t){addEventListener(t,kick,{passive:true});});
-var hero=d.querySelector('video[autoplay]');if(hero){hero.muted=true;hero.play().catch(function(){});}
+/* the hero reel is the only video: it plays on load, reduced motion included (Julien's call); if iOS blocks autoplay (Low Power Mode), the first touch or scroll starts it while it is on screen */
+var hero=d.querySelector('video[autoplay]');
+function kick(){var r=hero.getBoundingClientRect();if(hero.paused&&r.bottom>0&&r.top<innerHeight)hero.play().catch(function(){});}
+if(hero){hero.muted=true;hero.play().catch(function(){});['touchstart','scroll','click'].forEach(function(t){addEventListener(t,kick,{passive:true});});}
 d.addEventListener('visibilitychange',function(){h.classList.toggle('hid',d.hidden);});
 
 /* nav backdrop once scrolled; ladders and read-outs: ALT falls as you scroll down ("fly low"), SPD follows the scroll speed */
@@ -24,10 +23,6 @@ function hud(){wait=false;var y=scrollY,t=performance.now(),dt=Math.max(16,t-las
 }
 function settle(){if(!wait){wait=true;raf(hud);}}
 addEventListener('scroll',settle,{passive:true});hud();
-
-/* gameplay clips play only while on screen (preload=none until then) */
-if('IntersectionObserver' in window){var vo=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting&&!d.hidden)v.play().catch(function(){});else v.pause();});},{rootMargin:'200px 0px'});
- vids.forEach(function(v){vo.observe(v);});}
 
 if(!('IntersectionObserver' in window)){h.classList.remove('js');return;}
 

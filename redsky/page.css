@@ -56,12 +56,13 @@ h1,h2,h3{margin:0;font-weight:800}
 @keyframes lock{0%{opacity:0;transform:scale(1.9)}45%{opacity:1;transform:scale(1.04)}55%{transform:scale(1)}62%{opacity:.2}72%{opacity:1}82%{opacity:.2}100%{opacity:1;transform:scale(1)}}
 
 /* ---------- nav ---------- */
-.top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
- padding:12px var(--gut);padding-top:max(12px,env(safe-area-inset-top));transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-/* the bar's backdrop also covers the status-bar strip above it, so scrolled content never shows over the top edge */
-.top::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:120px;background:inherit}
+/* opaque from the first frame: iOS 26 Safari tints the status bar from the top fixed bar's solid background-color, and shows the page through it if that is translucent */
+.top{position:fixed;top:0;left:0;right:0;z-index:61;background-color:#020403;display:flex;align-items:center;justify-content:space-between;gap:16px;
+ padding:12px var(--gut);padding-top:max(12px,env(safe-area-inset-top));transition:border-color .3s;border-bottom:1px solid transparent}
+/* covers the rubber-band overscroll above the bar too */
+.top::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:120px;background-color:#020403}
 video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}
-.top.is-s{background:rgba(2,4,3,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-color:var(--line)}
+.top.is-s{border-color:var(--line)}
 .top__wm img{width:112px;height:auto}
 .top nav{display:flex;align-items:center;gap:4px}
 .top nav a{font:600 12px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-decoration:none;padding:12px 8px;min-height:44px;display:inline-flex;align-items:center}
@@ -105,13 +106,11 @@ video::-webkit-media-controls-start-playback-button{display:none!important;-webk
 .js .rv:not(.in) .ph{opacity:0;transform:translateY(60px) rotateX(18deg) rotateY(calc(var(--ry) * 2)) rotateZ(var(--rz))}
 
 /* ---------- hero ---------- */
-.hero{position:relative;min-height:100svh;padding:92px 0 56px;overflow:hidden}
+/* top padding follows the opaque bar (safe area + 44px nav + 12px) so the kicker never sits under it */
+.hero{position:relative;min-height:100svh;padding:calc(max(12px,env(safe-area-inset-top)) + 80px) 0 56px;overflow:hidden}
 .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:160px;background:linear-gradient(transparent,var(--bg0));pointer-events:none}
 .hero__in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center}
 .hero__in>.kick{margin-bottom:6px}
-/* the word sits over the phone, the Skyline slicing across the screen (hextaze-style stack) */
-.hero__wm{position:relative;z-index:4;width:min(108%,1180px);margin:0 -4% calc(-1 * min(14vw,150px));pointer-events:none}
-.hero__wm img{width:100%;height:auto}
 .hero::before{content:"";position:absolute;left:50%;top:38%;width:min(140vw,1400px);aspect-ratio:1.6;transform:translate(-50%,-50%);pointer-events:none;
  background:radial-gradient(closest-side,rgba(232,40,43,.22),rgba(232,40,43,.06) 55%,transparent)}
 .hero__copy{display:grid;gap:8px;justify-items:center;margin-top:8px}
@@ -167,13 +166,13 @@ video::-webkit-media-controls-start-playback-button{display:none!important;-webk
 .split .stage{min-height:480px;align-items:center}
 .split .ph{--w:min(56vw,250px)}
 .facts{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:0;border-top:1px solid var(--line);max-width:460px}
-.facts li{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--text);font-size:16px;line-height:1.5}
+.facts li{display:grid;grid-template-columns:116px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--text);font-size:16px;line-height:1.5}
 .facts b{font:800 26px/1 var(--disp);color:var(--g);letter-spacing:.02em;text-transform:uppercase;padding-top:2px}
 
 /* prologue: the radio, one line at a time */
 .radio{padding-top:clamp(96px,14vw,180px)}
-.radio ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.radio li{font:800 clamp(36px,8.4vw,92px)/.95 var(--disp);text-transform:uppercase;color:var(--bone);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.radio ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.radio li{font:800 clamp(36px,8.4vw,92px)/.95 var(--disp);text-transform:uppercase;text-wrap:balance;color:var(--bone);transition:opacity .6s var(--ease),transform .6s var(--ease)}
 .radio li:last-child{color:var(--g)}
 .js .radio li:not(.in){opacity:.12;transform:translateX(-10px)}
 .radio .who{margin-top:26px;font:600 12px/1.4 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
@@ -217,7 +216,7 @@ video::-webkit-media-controls-start-playback-button{display:none!important;-webk
 .wp{position:relative;padding:12px 0 14px 40px;border-bottom:1px solid var(--line)}
 .wp::before{content:"";position:absolute;left:4px;top:19px;width:12px;height:12px;border:2px solid var(--g);border-radius:50%;background:var(--bg0);transition:background .4s}
 .wp.in::before{background:var(--g)}
-.wp h3{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font:800 clamp(26px,3.4vw,36px)/1 var(--disp);text-transform:uppercase;letter-spacing:.01em}
+.wp h3{display:flex;align-items:baseline;gap:8px 12px;flex-wrap:wrap;font:800 clamp(26px,3.4vw,36px)/1 var(--disp);text-transform:uppercase;letter-spacing:.01em}
 .wp h3 small{font:600 12px/1 var(--ui);letter-spacing:.16em;color:var(--dim)}
 .wp p{color:var(--text);font-size:15px;line-height:1.5;margin-top:6px;max-width:52ch}
 .boss{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font:600 11px/1 var(--ui);letter-spacing:.16em;color:var(--r);text-transform:uppercase;padding:6px 8px;
@@ -300,7 +299,7 @@ video::-webkit-media-controls-start-playback-button{display:none!important;-webk
 }
 @media (min-width:960px){
  :root{--gut:48px}
- .frame{display:block;position:fixed;inset:14px;z-index:55;pointer-events:none}
+ .frame{display:block;position:fixed;inset:14px;z-index:62;pointer-events:none}
  .frame i{position:absolute;width:26px;height:26px;border:2px solid var(--line-2)}
  .frame i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
  .frame i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
@@ -308,7 +307,7 @@ video::-webkit-media-controls-start-playback-button{display:none!important;-webk
  .frame i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
  .top{padding:18px var(--gut);padding-top:max(18px,env(safe-area-inset-top))}
  .top__wm img{width:132px}
- .hero{padding:96px 0 40px}
+ .hero{padding:calc(max(18px,env(safe-area-inset-top)) + 96px) 0 40px}
  .hero__stage{height:680px;--w2:150px}
  .hero .ph{--w:300px}
  .hero__copy{grid-template-columns:auto minmax(0,440px);gap:0 56px;align-items:center;justify-items:start;text-align:left;margin-top:40px}

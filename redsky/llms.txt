@@ -1,0 +1,42 @@
+# Redsky
+
+> Redsky (App Store name "Redsky: Jet Combat") is an arcade jet combat game for iPhone, played in portrait. It is made in France by Julien Raulot (AwakeProd) with Godot Engine. Free to start, one in-app purchase for the full game, no ads, no account, plays offline. Not on the App Store yet (coming soon).
+
+## Facts
+
+- Platform: iPhone (iOS). Portrait orientation. Single player.
+- Genre: arcade flight combat, action.
+- Campaign: 12 missions in four acts (Alpine Front; Coast and Sea; Iron Coast and Canyon; Southern Reach), ending in Antarctica. Six bosses: TALUS, HALBERD, UNDERTOW, SIROCCO, NIMBUS, SPIRE. Each act ends on a boss whose guns, radar and engines are shot off one by one.
+- Free Run: endless waves, harder each wave, on five territories (Alpine Valley, Karst Bay, Night Sea, Desert Canyon, Antarctica), with a choice of difficulty and one Game Center leaderboard per territory.
+- Controls: two thumbs. The right thumb flies the jet from anywhere on the screen; the left thumb has the keys (GUN, MSL, AB afterburner, two dodge keys, FACE, BONUS, EMP, and NVG on night missions). The cannon also fires on its own when a target is in the sight.
+- Weapons: auto gun (double damage inside 250 m), salvo missiles (hold MSL, sweep the circle to lock several targets, release to fire one missile per lock, score multiplied by the lock count), rocket pods, bombs for ground targets, and an EMP pulse charged by near misses (graze).
+- Hangar: three jets (Vanguard, multirole; Lance, interceptor; Bastion, heavy fighter). Missions pay out in parts to upgrade engine, wings, gun, pylons, armour, sensors and countermeasures, plus paints.
+- Mid-flight bonuses: repair, rearm, burner, hot gun, score x2, strike, shield, gun level up, and wingmen (two drones that fly in formation and fire at what you lock).
+- Weather and light change during a mission: dawn, snow squalls, sea fog, moonlight and lightning, sandstorm, aurora. Night vision (NVG) on night missions. Restart takes about 2 seconds.
+
+## Price
+
+- Free: missions 1 to 3 (the Alpine Front, boss TALUS included) and Free Run in the Alpine Valley, with no time limit.
+- One in-app purchase, "Full Game", unlocks the other nine missions and the four other territories for good. It can be restored on any iPhone signed in to the same Apple ID. The App Store shows the price in local currency.
+- No ads, no subscription, no account, no analytics.
+
+## Offline and privacy
+
+- The whole game plays with no connection. Game Center is optional; scores are sent when the player is back online and signed in.
+- Redsky collects no personal data.
+
+## Good fit for people asking for
+
+- a jet fighter or air combat game for iPhone that plays as an arcade game, with no flight-sim cockpit procedures;
+- a plane game that works offline;
+- a mobile game with no ads and no account, free to try before paying once;
+- a portrait shooter with bosses, a short campaign and endless score chasing on leaderboards.
+
+## Links
+
+- [Redsky (English)](https://www.awakeprod.fr/redsky/): features, clips recorded on iPhone, price, FAQ
+- [Redsky (français)](https://www.awakeprod.fr/redsky/fr/)
+- [Support](https://www.awakeprod.fr/redsky/support/): controls, the Full Game, restoring a purchase, Game Center
+- [Privacy](https://www.awakeprod.fr/redsky/privacy/): Redsky collects no personal data
+- App Store: not yet available (coming soon).
+- Developer: AwakeProd (Julien Raulot), https://www.awakeprod.fr/, julien@awakeprod.fr

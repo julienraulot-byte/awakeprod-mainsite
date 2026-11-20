@@ -9,38 +9,43 @@
 <link rel="alternate" hreflang="en" href="https://www.awakeprod.fr/redsky/">
 <link rel="alternate" hreflang="fr" href="https://www.awakeprod.fr/redsky/fr/">
 <link rel="alternate" hreflang="x-default" href="https://www.awakeprod.fr/redsky/">
-<!-- TODO(Julien): once the app is live, add the Smart App Banner <meta name="apple-itunes-app" content="app-id=XXXXXXXXXX">
-     and replace every href="#appstore" with https://apps.apple.com/app/idXXXXXXXXXX. -->
+<!-- TODO(Julien): once the app is live, uncomment the Smart App Banner below with the real id,
+     replace every href="#appstore" with https://apps.apple.com/app/idXXXXXXXXXX,
+     and add that URL to "sameAs" / "offers.url" in the JSON-LD.
+<meta name="apple-itunes-app" content="app-id=XXXXXXXXXX"> -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AwakeProd">
 <meta property="og:title" content="Redsky: Jet Combat for iPhone">
-<meta property="og:description" content="Twelve missions, six bosses, salvo locks and endless waves. Fly it in portrait, one thumb on the stick.">
+<meta property="og:description" content="Twelve missions, six bosses, salvo locks and endless waves. Fly it in portrait, one thumb on the stick. Free to start, no ads.">
 <meta property="og:url" content="https://www.awakeprod.fr/redsky/">
-<!-- TODO(Julien): a 1200x630 og.jpg (wordmark + phone) is still to make; the reel poster stands in. -->
-<meta property="og:image" content="https://www.awakeprod.fr/redsky/media/hero-reel.jpg">
+<meta property="og:image" content="https://www.awakeprod.fr/redsky/media/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Redsky wordmark next to an iPhone flying low through an alpine valley, gunsight and HUD on screen">
+<meta property="og:video" content="https://www.awakeprod.fr/redsky/media/hero-reel.mp4">
+<meta property="og:video:secure_url" content="https://www.awakeprod.fr/redsky/media/hero-reel.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="540">
+<meta property="og:video:height" content="1168">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Redsky: Jet Combat for iPhone">
+<meta name="twitter:description" content="Twelve missions, six bosses, salvo locks and endless waves. Fly it in portrait, one thumb on the stick. Free to start, no ads.">
+<meta name="twitter:image" content="https://www.awakeprod.fr/redsky/media/og.jpg">
+<meta name="twitter:image:alt" content="The Redsky wordmark next to an iPhone flying low through an alpine valley, gunsight and HUD on screen">
 <meta name="theme-color" content="#020403">
 <link rel="icon" href="/redsky/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/redsky/favicon-48.png" sizes="48x48" type="image/png">
 <link rel="apple-touch-icon" href="/redsky/apple-touch-icon.png">
+<link rel="alternate" type="text/plain" href="/redsky/llms.txt" title="Redsky facts for AI assistants">
 <link rel="preload" href="/redsky/fonts/BigShoulders-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/redsky/fonts/ChakraPetch-Medium.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/redsky/media/wordmark.webp" as="image" type="image/webp">
+<link rel="preload" href="/redsky/media/wordmark.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="preload" href="/redsky/media/hero-reel.jpg" as="image" type="image/jpeg">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[
-{"@type":["VideoGame","SoftwareApplication"],"@id":"https://www.awakeprod.fr/redsky/#game","name":"Redsky","alternateName":"Redsky: Jet Combat","url":"https://www.awakeprod.fr/redsky/",
- "description":"Arcade jet combat for iPhone, played in portrait. Twelve missions across the Alpine Front, the coast and the sea, the desert canyon and Antarctica, six bosses, salvo missile locks, wingmen and bonuses, and endless Free Run waves on five territories with Game Center boards. Missions 1 to 3 and the Alpine Valley Free Run are free; one in-app purchase unlocks the Full Game. No ads, no account.",
- "image":"https://www.awakeprod.fr/redsky/icon.png",
- "applicationCategory":"GameApplication","applicationSubCategory":"Action game","gamePlatform":["iOS","iPhone"],"genre":["Arcade","Action","Flight"],
- "playMode":"SinglePlayer","isAccessibleForFree":true,
- "author":{"@type":"Person","name":"Julien Raulot","url":"https://www.awakeprod.fr/"},
- "publisher":{"@type":"Organization","name":"AwakeProd","url":"https://www.awakeprod.fr/"}},
-{"@type":"BreadcrumbList","itemListElement":[
- {"@type":"ListItem","position":1,"name":"AwakeProd","item":"https://www.awakeprod.fr/"},
- {"@type":"ListItem","position":2,"name":"Redsky","item":"https://www.awakeprod.fr/redsky/"}]}
-]}
+{"@context":"https://schema.org","@graph":[{"@type":["VideoGame","MobileApplication"],"@id":"https://www.awakeprod.fr/redsky/#game","name":"Redsky","alternateName":"Redsky: Jet Combat","url":"https://www.awakeprod.fr/redsky/","description":"Arcade jet combat for iPhone, played in portrait. Twelve missions across the Alpine Front, the coast and the sea, the desert canyon and Antarctica, six bosses, salvo missile locks, wingmen and bonuses, and endless Free Run waves on five territories with Game Center boards. Missions 1 to 3 and the Alpine Valley Free Run are free; one in-app purchase unlocks the Full Game. No ads, no account, plays offline.","image":"https://www.awakeprod.fr/redsky/icon.png","screenshot":["https://www.awakeprod.fr/redsky/media/screen-briefing-880.webp","https://www.awakeprod.fr/redsky/media/screen-hangar-880.webp","https://www.awakeprod.fr/redsky/media/clip-snow.jpg","https://www.awakeprod.fr/redsky/media/clip-nvg.jpg"],"operatingSystem":"iOS","applicationCategory":"GameApplication","applicationSubCategory":"Action game","gamePlatform":["iPhone","iOS"],"genre":["Arcade","Action","Flight combat"],"playMode":"SinglePlayer","numberOfPlayers":{"@type":"QuantitativeValue","value":1},"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","category":"free","description":"Free download: missions 1 to 3 and the Alpine Valley Free Run. One in-app purchase (Full Game) unlocks all twelve missions and all five territories. No ads, no subscription."},"trailer":{"@id":"https://www.awakeprod.fr/redsky/#hero-reel"},"author":{"@type":"Person","name":"Julien Raulot"},"publisher":{"@id":"https://www.awakeprod.fr/#org"},"creator":{"@id":"https://www.awakeprod.fr/#org"},"countryOfOrigin":"FR","inLanguage":"en"},{"@type":"Organization","@id":"https://www.awakeprod.fr/#org","name":"AwakeProd","legalName":"Julien Raulot EI","url":"https://www.awakeprod.fr/","logo":"https://www.awakeprod.fr/img/icon-512.png","email":"julien@awakeprod.fr","founder":{"@type":"Person","name":"Julien Raulot"},"address":{"@type":"PostalAddress","addressCountry":"FR"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"AwakeProd","item":"https://www.awakeprod.fr/"},{"@type":"ListItem","position":2,"name":"Redsky","item":"https://www.awakeprod.fr/redsky/"}]},{"@type":"FAQPage","@id":"https://www.awakeprod.fr/redsky/#faq","inLanguage":"en","mainEntity":[{"@type":"Question","name":"How do the controls work?","acceptedAnswer":{"@type":"Answer","text":"Two thumbs, portrait. Put your right thumb down anywhere on the screen and it becomes the stick. The left thumb has the keys: GUN, MSL, AB for the afterburner, the two dodge keys, FACE to swing onto a target, BONUS and EMP. On night missions an NVG key turns on night vision. The cannon also fires on its own when a target sits in the sight."}},{"@type":"Question","name":"What is free?","acceptedAnswer":{"@type":"Answer","text":"Missions 1 to 3 (the Alpine Front, boss included) and Free Run in the Alpine Valley. One purchase unlocks the Full Game: the other nine missions and the four other territories. Restore it on any iPhone signed in to the same Apple ID."}},{"@type":"Question","name":"Does Redsky work offline?","acceptedAnswer":{"@type":"Answer","text":"Yes. The whole game plays with no connection. Game Center scores are sent when you are back online and signed in."}},{"@type":"Question","name":"Do I need an account?","acceptedAnswer":{"@type":"Answer","text":"No. There are no ads and no analytics. Game Center is optional: if you are signed in, your best scores go to its boards."}}]},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#hero-reel","name":"Redsky gameplay reel","description":"Six iPhone recordings of Redsky cut together: alpine valley, snow, desert canyon, night vision, Karst Bay and the escort above the clouds.","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/hero-reel.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/hero-reel.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT17S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-snow","name":"Redsky: Low over the snow","description":"Low over the snow: two red fighters in the gunsight, a kill, then GUN LEVEL 2","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-snow.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-snow.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT6S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-alpine","name":"Redsky: The alpine valley","description":"The alpine valley: the radio calls the targets and a two-missile salvo leaves the rails","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-alpine.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-alpine.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT5S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-canyon","name":"Redsky: Desert Canyon","description":"Desert Canyon: a salvo on the gun sites and the wingmen joining","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-canyon.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-canyon.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT3S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-escort","name":"Redsky: Above the clouds","description":"Above the clouds: missiles away, then an afterburner climb","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-escort.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-escort.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT4S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-nvg","name":"Redsky: Night vision on","description":"Night vision on: destroyers burning in green, then GUN LEVEL 2","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-nvg.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-nvg.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT5S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}},{"@type":"VideoObject","@id":"https://www.awakeprod.fr/redsky/#clip-karst","name":"Redsky: Karst Bay at dusk","description":"Karst Bay at dusk: rockets into a ship in the harbour, then a climb on afterburner","thumbnailUrl":"https://www.awakeprod.fr/redsky/media/clip-karst.jpg","contentUrl":"https://www.awakeprod.fr/redsky/media/clip-karst.mp4","uploadDate":"2026-11-20T12:14:09+01:00","duration":"PT4S","width":540,"height":1168,"inLanguage":"en","publisher":{"@id":"https://www.awakeprod.fr/#org"}}]}
 </script>
 <link rel="stylesheet" href="/redsky/page.css?v=3">
 <script src="/redsky/page.js?v=3" defer></script>

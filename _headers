@@ -18,3 +18,9 @@
 
 /redsky/fonts/*
   Cache-Control: public, max-age=31536000, immutable
+
+/redsky/*.md
+  X-Robots-Tag: noindex
+
+/redsky/llms.txt
+  Content-Type: text/plain; charset=utf-8

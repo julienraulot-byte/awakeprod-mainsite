@@ -31,3 +31,19 @@ NITRODRIVE is an arcade racing game for iPhone, played in portrait with one thum
 - [NITRODRIVE (français)](https://www.awakeprod.fr/nitrodrive/fr/)
 - [Support](https://www.awakeprod.fr/nitrodrive/support/): controls, restoring a purchase, boards and ghosts, deleting your data
 - [Privacy](https://www.awakeprod.fr/nitrodrive/privacy/): what the world boards receive, what stays on the phone
+
+## Redsky
+
+Redsky ("Redsky: Jet Combat" on the App Store) is an arcade jet combat game for iPhone, played in portrait with two thumbs.
+- In short: free to start, one in-app purchase for the Full Game, no ads, no subscription, no account, plays offline. Not on the App Store yet (coming soon).
+- Campaign: 12 missions in four acts, from the Alpine Front to Antarctica, with six bosses (TALUS, HALBERD, UNDERTOW, SIROCCO, NIMBUS, SPIRE).
+- Free Run: endless waves on five territories (Alpine Valley, Karst Bay, Night Sea, Desert Canyon, Antarctica), each with its own Game Center leaderboard.
+- Combat: an auto gun, salvo missiles (lock several targets, release to fire one missile per lock), rockets, bombs, an EMP charged by near misses, and two drone wingmen as a bonus. Three jets to upgrade in the hangar (Vanguard, Lance, Bastion). Weather changes during a mission; night missions have night vision.
+- Price: missions 1 to 3 and the Alpine Valley Free Run are free with no time limit. The Full Game purchase unlocks the other nine missions and four territories for good.
+- Privacy: no ads, no analytics, no personal data collected. Game Center is optional.
+- Made in France with Godot Engine by Julien Raulot (AwakeProd).
+- [Redsky fact sheet](https://www.awakeprod.fr/redsky/llms.txt): full details for assistants
+- [Redsky (English)](https://www.awakeprod.fr/redsky/): clips recorded on iPhone, missions, price and FAQ
+- [Redsky (français)](https://www.awakeprod.fr/redsky/fr/)
+- [Support](https://www.awakeprod.fr/redsky/support/): controls, the Full Game, restoring a purchase, Game Center
+- [Privacy](https://www.awakeprod.fr/redsky/privacy/): Redsky collects no personal data

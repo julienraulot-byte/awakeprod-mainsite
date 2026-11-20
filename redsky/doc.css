@@ -1,7 +1,7 @@
-/* Skyred support and privacy pages: the product page's palette and type, one calm reading column. Fonts OFL: /skyred/fonts/OFL.txt */
-@font-face{font-family:"Big Shoulders";font-weight:800;font-display:swap;src:url(/skyred/fonts/BigShoulders-800.woff2) format("woff2")}
-@font-face{font-family:"Chakra Petch";font-weight:500;font-display:swap;src:url(/skyred/fonts/ChakraPetch-Medium.woff2) format("woff2")}
-@font-face{font-family:"Chakra Petch";font-weight:600;font-display:swap;src:url(/skyred/fonts/ChakraPetch-SemiBold.woff2) format("woff2")}
+/* Redsky support and privacy pages: the product page's palette and type, one calm reading column. Fonts OFL: /redsky/fonts/OFL.txt */
+@font-face{font-family:"Big Shoulders";font-weight:800;font-display:swap;src:url(/redsky/fonts/BigShoulders-800.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:500;font-display:swap;src:url(/redsky/fonts/ChakraPetch-Medium.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:600;font-display:swap;src:url(/redsky/fonts/ChakraPetch-SemiBold.woff2) format("woff2")}
 :root{color-scheme:dark;--g:#7CFF6B;--bone:#F2EFE8;--text:rgba(242,239,232,.72);--dim:rgba(242,239,232,.5);--line:rgba(124,255,107,.16)}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:#020403}

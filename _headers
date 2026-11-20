@@ -13,8 +13,8 @@
 /nitrodrive/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-/skyred/media/*
+/redsky/media/*
   Cache-Control: public, max-age=31536000, immutable
 
-/skyred/fonts/*
+/redsky/fonts/*
   Cache-Control: public, max-age=31536000, immutable

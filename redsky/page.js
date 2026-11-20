@@ -1,11 +1,11 @@
-/* Skyred page: HUD ladders and read-outs that run with the scroll, lock-on titles, the radio, the salvo demo, reveals.
+/* Redsky page: HUD ladders and read-outs that run with the scroll, lock-on titles, the radio, the salvo demo, reveals.
    No framework, no network. Without JS (or with reduced motion) everything shows in its final state. */
 (function(){
 var d=document,h=d.documentElement,RM=matchMedia('(prefers-reduced-motion: reduce)').matches,raf=requestAnimationFrame;
 h.classList.add('js');
 
-var v=d.querySelector('.hero video');
-if(v&&RM){v.removeAttribute('autoplay');v.pause();}
+var vids=d.querySelectorAll('video[data-auto]');
+if(RM)vids.forEach(function(v){v.removeAttribute('autoplay');v.pause();});
 d.addEventListener('visibilitychange',function(){h.classList.toggle('hid',d.hidden);});
 
 /* nav backdrop once scrolled; ladders and read-outs: ALT falls as you scroll down ("fly low"), SPD follows the scroll speed */
@@ -22,8 +22,9 @@ function hud(){wait=false;var y=scrollY,t=performance.now(),dt=Math.max(16,t-las
 function settle(){if(!wait){wait=true;raf(hud);}}
 addEventListener('scroll',settle,{passive:true});hud();
 
-/* hero video: hold it off-screen */
-if(v&&!RM&&'IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&!d.hidden)v.play().catch(function(){});else v.pause();});}).observe(v);}
+/* gameplay clips play only while on screen (preload=none until then) */
+if(!RM&&'IntersectionObserver' in window){var vo=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting&&!d.hidden)v.play().catch(function(){});else v.pause();});},{rootMargin:'200px 0px'});
+ vids.forEach(function(v){vo.observe(v);});}
 
 if(!('IntersectionObserver' in window)){h.classList.remove('js');return;}
 

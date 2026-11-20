@@ -1,0 +1,28 @@
+/* Redsky support and privacy pages: the product page's palette and type, one calm reading column. Fonts OFL: /redsky/fonts/OFL.txt */
+@font-face{font-family:"Big Shoulders";font-weight:800;font-display:swap;src:url(/redsky/fonts/BigShoulders-800.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:500;font-display:swap;src:url(/redsky/fonts/ChakraPetch-Medium.woff2) format("woff2")}
+@font-face{font-family:"Chakra Petch";font-weight:600;font-display:swap;src:url(/redsky/fonts/ChakraPetch-SemiBold.woff2) format("woff2")}
+:root{color-scheme:dark;--g:#7CFF6B;--bone:#F2EFE8;--text:rgba(242,239,232,.72);--dim:rgba(242,239,232,.5);--line:rgba(124,255,107,.16)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:#020403}
+body{margin:0;background:radial-gradient(120% 60% at 70% 0%,#0C1C11 0%,#020403 60%) fixed,#020403;color:var(--bone);
+ font:500 17px/1.6 "Chakra Petch",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:32px 16px 64px}
+.icon{display:block;margin-bottom:32px;width:56px;height:56px;border-radius:13px}
+h1,h2{font-family:"Big Shoulders",Impact,sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:.95;margin:0}
+h1{font-size:clamp(44px,9vw,64px);margin:0 0 12px}
+h2{font-size:26px;margin:36px 0 8px}
+p,ul{margin:0 0 12px;color:var(--text)}
+ul{padding-left:22px}
+li{margin-bottom:6px}
+a{color:var(--bone);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(124,255,107,.5)}
+a:hover{color:var(--g)}
+:focus-visible{outline:2px solid var(--g);outline-offset:3px}
+.sub{font-size:19px;line-height:1.4;color:var(--bone);margin:0 0 8px}
+.date{font-size:15px}
+nav{font:600 12px/1 "Chakra Petch",sans-serif;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--g);text-decoration:none}
+section+section{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+footer{font-size:14px;line-height:1.6;margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--dim)}
+footer a{color:inherit}
+@media(min-width:700px){main{padding:48px 24px 80px}}

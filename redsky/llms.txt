@@ -7,7 +7,7 @@
 - Platform: iPhone (iOS). Portrait orientation. Single player.
 - Genre: arcade flight combat, action.
 - Campaign: 12 missions in four acts (Alpine Front; Coast and Sea; Iron Coast and Canyon; Southern Reach), ending in Antarctica. Six bosses: TALUS, HALBERD, UNDERTOW, SIROCCO, NIMBUS, SPIRE. Each act ends on a boss whose guns, radar and engines are shot off one by one.
-- Free Run: endless waves, harder each wave, on five territories (Alpine Valley, Karst Bay, Night Sea, Desert Canyon, Antarctica), with a choice of difficulty and one Game Center leaderboard per territory.
+- Free Run: endless waves, harder each wave, on six territories (Alpine Valley, Karst Bay, Night Sea, Desert Canyon, Antarctica, Sim Range), with a choice of difficulty and one Game Center leaderboard per territory.
 - Controls: two thumbs. The right thumb flies the jet from anywhere on the screen; the left thumb has the keys (GUN, MSL, AB afterburner, two dodge keys, FACE, BONUS, EMP, and NVG on night missions). The cannon also fires on its own when a target is in the sight.
 - Weapons: auto gun (double damage inside 250 m), salvo missiles (hold MSL, sweep the circle to lock several targets, release to fire one missile per lock, score multiplied by the lock count), rocket pods, bombs for ground targets, and an EMP pulse charged by near misses (graze).
 - Hangar: three jets (Vanguard, multirole; Lance, interceptor; Bastion, heavy fighter). Missions pay out in parts to upgrade engine, wings, gun, pylons, armour, sensors and countermeasures, plus paints.
@@ -17,7 +17,7 @@
 ## Price
 
 - Free: missions 1 to 3 (the Alpine Front, boss TALUS included) and Free Run in the Alpine Valley, with no time limit.
-- One in-app purchase, "Full Game", unlocks the other nine missions and the four other territories for good. It can be restored on any iPhone signed in to the same Apple ID. The App Store shows the price in local currency.
+- One in-app purchase, "Full Game", unlocks the other nine missions and the five other territories for good. It can be restored on any iPhone signed in to the same Apple ID. The App Store shows the price in local currency.
 - No ads, no subscription, no account, no analytics.
 
 ## Offline and privacy
